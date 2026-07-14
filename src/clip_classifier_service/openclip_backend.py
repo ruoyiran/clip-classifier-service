@@ -7,8 +7,11 @@ from pathlib import Path
 import open_clip
 import torch
 from PIL import Image, ImageOps, UnidentifiedImageError
+from pillow_heif import register_heif_opener
 
 from clip_classifier_service.settings import Settings
+
+register_heif_opener(thumbnails=False)
 
 
 class OpenClipBackend:

@@ -100,6 +100,10 @@ Start-Service ClipClassifierService
   - Plain/decrypted image bytes: `31457280` bytes, 30 MiB.
   - Encrypted JSON request body: `44040192` bytes, 42 MiB.
 
+Supported input formats include JPEG/JPG, PNG, BMP, HEIC, and HEIF. The
+service validates the decoded image bytes rather than trusting file extensions
+or MIME types.
+
 - `GET /healthz`
 - `GET /readyz`
 - `GET /metrics`
@@ -122,25 +126,25 @@ If `CLIP_BASE_PATH=/openai-clip`, every route receives that prefix, for example 
 Example:
 
 ```powershell
-curl.exe -H "Authorization: Bearer <token>" -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/v1/classify?top_k=3"
+curl.exe -H "Authorization: Bearer <token>" -F "file=@C:\path\image.heic" "http://127.0.0.1:8000/v1/classify?top_k=3"
 ```
 
 Batch example:
 
 ```powershell
-curl.exe -H "Authorization: Bearer <token>" -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
+curl.exe -H "Authorization: Bearer <token>" -F "files=@C:\path\one.png" -F "files=@C:\path\two.bmp" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
 ```
 
 Encrypted example:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000 --token <token>
+.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.heic --base-url http://127.0.0.1:8000 --token <token>
 ```
 
 External encrypted batch smoke test:
 
 ```powershell
-python test_external_api.py C:\path\one.jpg C:\path\two.jpg --base-url https://example.internal/openai-clip --batch-size 8 --top-k 3
+python test_external_api.py C:\path\one.png C:\path\two.heic --base-url https://example.internal/openai-clip --batch-size 8 --top-k 3
 ```
 
 ## Production notes

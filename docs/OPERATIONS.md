@@ -97,14 +97,18 @@ The script writes service logs under `logs/`.
 
 ## API Smoke Tests
 
+Supported input formats include JPEG/JPG, PNG, BMP, HEIC, and HEIF. The
+service validates decoded image bytes and keeps invalid payloads as `400`
+responses.
+
 ```powershell
 $token = "<token>"
 curl.exe -H "Authorization: Bearer $token" http://127.0.0.1:8000/healthz
 curl.exe -H "Authorization: Bearer $token" http://127.0.0.1:8000/readyz
 curl.exe -H "Authorization: Bearer $token" http://127.0.0.1:8000/metrics
-curl.exe -H "Authorization: Bearer $token" -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/v1/classify?top_k=3"
-curl.exe -H "Authorization: Bearer $token" -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
-.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000 --token $token
+curl.exe -H "Authorization: Bearer $token" -F "file=@C:\path\image.heic" "http://127.0.0.1:8000/v1/classify?top_k=3"
+curl.exe -H "Authorization: Bearer $token" -F "files=@C:\path\one.png" -F "files=@C:\path\two.bmp" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
+.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.heic --base-url http://127.0.0.1:8000 --token $token
 ```
 
 The `threshold` query parameter filters by returned softmax `score`. If a client
@@ -115,7 +119,7 @@ If `CLIP_BASE_PATH=/openai-clip`, include that prefix in every URL:
 
 ```powershell
 curl.exe -H "Authorization: Bearer $token" http://127.0.0.1:8000/openai-clip/healthz
-curl.exe -H "Authorization: Bearer $token" -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/openai-clip/v1/classify?top_k=3"
+curl.exe -H "Authorization: Bearer $token" -F "file=@C:\path\image.heic" "http://127.0.0.1:8000/openai-clip/v1/classify?top_k=3"
 ```
 
 ## Production Checklist
