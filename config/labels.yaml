@@ -1,0 +1,1184 @@
+labels:
+  # People and body
+  - id: person
+    name: Person
+    prompt: a photo of a person
+    enabled: true
+  - id: face
+    name: Face
+    prompt: a close-up photo of a human face
+    enabled: true
+  - id: hand
+    name: Hand
+    prompt: a photo of a human hand
+    enabled: true
+  - id: baby
+    name: Baby
+    prompt: a photo of a baby
+    enabled: true
+  - id: child
+    name: Child
+    prompt: a photo of a child
+    enabled: true
+  - id: crowd
+    name: Crowd
+    prompt: a photo of a crowd of people
+    enabled: true
+
+  # Animals
+  - id: cat
+    name: Cat
+    prompt: a photo of a cat
+    enabled: true
+  - id: dog
+    name: Dog
+    prompt: a photo of a dog
+    enabled: true
+  - id: puppy
+    name: Puppy
+    prompt: a photo of a puppy
+    enabled: true
+  - id: kitten
+    name: Kitten
+    prompt: a photo of a kitten
+    enabled: true
+  - id: horse
+    name: Horse
+    prompt: a photo of a horse
+    enabled: true
+  - id: cow
+    name: Cow
+    prompt: a photo of a cow
+    enabled: true
+  - id: sheep
+    name: Sheep
+    prompt: a photo of a sheep
+    enabled: true
+  - id: goat
+    name: Goat
+    prompt: a photo of a goat
+    enabled: true
+  - id: pig
+    name: Pig
+    prompt: a photo of a pig
+    enabled: true
+  - id: rabbit
+    name: Rabbit
+    prompt: a photo of a rabbit
+    enabled: true
+  - id: hamster
+    name: Hamster
+    prompt: a photo of a hamster
+    enabled: true
+  - id: mouse
+    name: Mouse
+    prompt: a photo of a mouse
+    enabled: true
+  - id: squirrel
+    name: Squirrel
+    prompt: a photo of a squirrel
+    enabled: true
+  - id: deer
+    name: Deer
+    prompt: a photo of a deer
+    enabled: true
+  - id: bear
+    name: Bear
+    prompt: a photo of a bear
+    enabled: true
+  - id: panda
+    name: Panda
+    prompt: a photo of a panda
+    enabled: true
+  - id: koala
+    name: Koala
+    prompt: a photo of a koala
+    enabled: true
+  - id: monkey
+    name: Monkey
+    prompt: a photo of a monkey
+    enabled: true
+  - id: gorilla
+    name: Gorilla
+    prompt: a photo of a gorilla
+    enabled: true
+  - id: elephant
+    name: Elephant
+    prompt: a photo of an elephant
+    enabled: true
+  - id: giraffe
+    name: Giraffe
+    prompt: a photo of a giraffe
+    enabled: true
+  - id: zebra
+    name: Zebra
+    prompt: a photo of a zebra
+    enabled: true
+  - id: lion
+    name: Lion
+    prompt: a photo of a lion
+    enabled: true
+  - id: tiger
+    name: Tiger
+    prompt: a photo of a tiger
+    enabled: true
+  - id: leopard
+    name: Leopard
+    prompt: a photo of a leopard
+    enabled: true
+  - id: wolf
+    name: Wolf
+    prompt: a photo of a wolf
+    enabled: true
+  - id: fox
+    name: Fox
+    prompt: a photo of a fox
+    enabled: true
+  - id: raccoon
+    name: Raccoon
+    prompt: a photo of a raccoon
+    enabled: true
+  - id: skunk
+    name: Skunk
+    prompt: a photo of a skunk
+    enabled: true
+  - id: kangaroo
+    name: Kangaroo
+    prompt: a photo of a kangaroo
+    enabled: true
+  - id: camel
+    name: Camel
+    prompt: a photo of a camel
+    enabled: true
+  - id: llama
+    name: Llama
+    prompt: a photo of a llama
+    enabled: true
+  - id: bat
+    name: Bat
+    prompt: a photo of a bat
+    enabled: true
+  - id: hedgehog
+    name: Hedgehog
+    prompt: a photo of a hedgehog
+    enabled: true
+  - id: otter
+    name: Otter
+    prompt: a photo of an otter
+    enabled: true
+  - id: sea_otter
+    name: Sea Otter
+    prompt: a photo of a sea otter floating in water
+    enabled: true
+  - id: seal
+    name: Seal
+    prompt: a photo of a seal
+    enabled: true
+  - id: dolphin
+    name: Dolphin
+    prompt: a photo of a dolphin
+    enabled: true
+  - id: whale
+    name: Whale
+    prompt: a photo of a whale
+    enabled: true
+  - id: shark
+    name: Shark
+    prompt: a photo of a shark
+    enabled: true
+  - id: fish
+    name: Fish
+    prompt: a photo of a fish
+    enabled: true
+  - id: goldfish
+    name: Goldfish
+    prompt: a photo of a goldfish
+    enabled: true
+  - id: turtle
+    name: Turtle
+    prompt: a photo of a turtle
+    enabled: true
+  - id: crocodile
+    name: Crocodile
+    prompt: a photo of a crocodile
+    enabled: true
+  - id: snake
+    name: Snake
+    prompt: a photo of a snake
+    enabled: true
+  - id: lizard
+    name: Lizard
+    prompt: a photo of a lizard
+    enabled: true
+  - id: frog
+    name: Frog
+    prompt: a photo of a frog
+    enabled: true
+  - id: bird
+    name: Bird
+    prompt: a photo of a bird
+    enabled: true
+  - id: eagle
+    name: Eagle
+    prompt: a photo of an eagle
+    enabled: true
+  - id: owl
+    name: Owl
+    prompt: a photo of an owl
+    enabled: true
+  - id: duck
+    name: Duck
+    prompt: a photo of a duck
+    enabled: true
+  - id: goose
+    name: Goose
+    prompt: a photo of a goose
+    enabled: true
+  - id: chicken
+    name: Chicken
+    prompt: a photo of a chicken
+    enabled: true
+  - id: rooster
+    name: Rooster
+    prompt: a photo of a rooster
+    enabled: true
+  - id: turkey
+    name: Turkey
+    prompt: a photo of a turkey
+    enabled: true
+  - id: penguin
+    name: Penguin
+    prompt: a photo of a penguin
+    enabled: true
+  - id: flamingo
+    name: Flamingo
+    prompt: a photo of a flamingo
+    enabled: true
+  - id: parrot
+    name: Parrot
+    prompt: a photo of a parrot
+    enabled: true
+  - id: swan
+    name: Swan
+    prompt: a photo of a swan
+    enabled: true
+  - id: peacock
+    name: Peacock
+    prompt: a photo of a peacock
+    enabled: true
+  - id: butterfly
+    name: Butterfly
+    prompt: a photo of a butterfly
+    enabled: true
+  - id: bee
+    name: Bee
+    prompt: a photo of a bee
+    enabled: true
+  - id: ant
+    name: Ant
+    prompt: a photo of an ant
+    enabled: true
+  - id: spider
+    name: Spider
+    prompt: a photo of a spider
+    enabled: true
+  - id: snail
+    name: Snail
+    prompt: a photo of a snail
+    enabled: true
+  - id: crab
+    name: Crab
+    prompt: a photo of a crab
+    enabled: true
+  - id: lobster
+    name: Lobster
+    prompt: a photo of a lobster
+    enabled: true
+  - id: shrimp
+    name: Shrimp
+    prompt: a photo of shrimp
+    enabled: true
+  - id: octopus
+    name: Octopus
+    prompt: a photo of an octopus
+    enabled: true
+  - id: jellyfish
+    name: Jellyfish
+    prompt: a photo of a jellyfish
+    enabled: true
+
+  # Vehicles and transport
+  - id: car
+    name: Car
+    prompt: a photo of a car
+    enabled: true
+  - id: truck
+    name: Truck
+    prompt: a photo of a truck
+    enabled: true
+  - id: bus
+    name: Bus
+    prompt: a photo of a bus
+    enabled: true
+  - id: van
+    name: Van
+    prompt: a photo of a van
+    enabled: true
+  - id: taxi
+    name: Taxi
+    prompt: a photo of a taxi
+    enabled: true
+  - id: ambulance
+    name: Ambulance
+    prompt: a photo of an ambulance
+    enabled: true
+  - id: fire_truck
+    name: Fire Truck
+    prompt: a photo of a fire truck
+    enabled: true
+  - id: police_car
+    name: Police Car
+    prompt: a photo of a police car
+    enabled: true
+  - id: motorcycle
+    name: Motorcycle
+    prompt: a photo of a motorcycle
+    enabled: true
+  - id: bicycle
+    name: Bicycle
+    prompt: a photo of a bicycle
+    enabled: true
+  - id: scooter
+    name: Scooter
+    prompt: a photo of a scooter
+    enabled: true
+  - id: train
+    name: Train
+    prompt: a photo of a train
+    enabled: true
+  - id: subway_train
+    name: Subway Train
+    prompt: a photo of a subway train
+    enabled: true
+  - id: airplane
+    name: Airplane
+    prompt: a photo of an airplane
+    enabled: true
+  - id: helicopter
+    name: Helicopter
+    prompt: a photo of a helicopter
+    enabled: true
+  - id: boat
+    name: Boat
+    prompt: a photo of a boat
+    enabled: true
+  - id: ship
+    name: Ship
+    prompt: a photo of a ship
+    enabled: true
+  - id: sailboat
+    name: Sailboat
+    prompt: a photo of a sailboat
+    enabled: true
+  - id: skateboard
+    name: Skateboard
+    prompt: a photo of a skateboard
+    enabled: true
+  - id: wheelchair
+    name: Wheelchair
+    prompt: a photo of a wheelchair
+    enabled: true
+  - id: stroller
+    name: Stroller
+    prompt: a photo of a baby stroller
+    enabled: true
+  - id: tractor
+    name: Tractor
+    prompt: a photo of a tractor
+    enabled: true
+  - id: excavator
+    name: Excavator
+    prompt: a photo of an excavator
+    enabled: true
+
+  # Clothing and accessories
+  - id: shirt
+    name: Shirt
+    prompt: a photo of a shirt
+    enabled: true
+  - id: t_shirt
+    name: T-Shirt
+    prompt: a photo of a t-shirt
+    enabled: true
+  - id: jacket
+    name: Jacket
+    prompt: a photo of a jacket
+    enabled: true
+  - id: coat
+    name: Coat
+    prompt: a photo of a coat
+    enabled: true
+  - id: dress
+    name: Dress
+    prompt: a photo of a dress
+    enabled: true
+  - id: skirt
+    name: Skirt
+    prompt: a photo of a skirt
+    enabled: true
+  - id: pants
+    name: Pants
+    prompt: a photo of pants
+    enabled: true
+  - id: jeans
+    name: Jeans
+    prompt: a photo of jeans
+    enabled: true
+  - id: shorts
+    name: Shorts
+    prompt: a photo of shorts
+    enabled: true
+  - id: shoe
+    name: Shoe
+    prompt: a photo of a shoe
+    enabled: true
+  - id: sneaker
+    name: Sneaker
+    prompt: a photo of a sneaker
+    enabled: true
+  - id: boot
+    name: Boot
+    prompt: a photo of a boot
+    enabled: true
+  - id: hat
+    name: Hat
+    prompt: a photo of a hat
+    enabled: true
+  - id: helmet
+    name: Helmet
+    prompt: a photo of a helmet
+    enabled: true
+  - id: glasses
+    name: Glasses
+    prompt: a photo of glasses
+    enabled: true
+  - id: sunglasses
+    name: Sunglasses
+    prompt: a photo of sunglasses
+    enabled: true
+  - id: watch
+    name: Watch
+    prompt: a photo of a wristwatch
+    enabled: true
+  - id: ring
+    name: Ring
+    prompt: a photo of a ring
+    enabled: true
+  - id: necklace
+    name: Necklace
+    prompt: a photo of a necklace
+    enabled: true
+  - id: handbag
+    name: Handbag
+    prompt: a photo of a handbag
+    enabled: true
+  - id: backpack
+    name: Backpack
+    prompt: a photo of a backpack
+    enabled: true
+  - id: suitcase
+    name: Suitcase
+    prompt: a photo of a suitcase
+    enabled: true
+  - id: umbrella
+    name: Umbrella
+    prompt: a photo of an umbrella
+    enabled: true
+
+  # Home, furniture, and appliances
+  - id: chair
+    name: Chair
+    prompt: a photo of a chair
+    enabled: true
+  - id: sofa
+    name: Sofa
+    prompt: a photo of a sofa
+    enabled: true
+  - id: table
+    name: Table
+    prompt: a photo of a table
+    enabled: true
+  - id: desk
+    name: Desk
+    prompt: a photo of a desk
+    enabled: true
+  - id: bed
+    name: Bed
+    prompt: a photo of a bed
+    enabled: true
+  - id: pillow
+    name: Pillow
+    prompt: a photo of a pillow
+    enabled: true
+  - id: blanket
+    name: Blanket
+    prompt: a photo of a blanket
+    enabled: true
+  - id: lamp
+    name: Lamp
+    prompt: a photo of a lamp
+    enabled: true
+  - id: mirror
+    name: Mirror
+    prompt: a photo of a mirror
+    enabled: true
+  - id: clock
+    name: Clock
+    prompt: a photo of a clock
+    enabled: true
+  - id: vase
+    name: Vase
+    prompt: a photo of a vase
+    enabled: true
+  - id: rug
+    name: Rug
+    prompt: a photo of a rug
+    enabled: true
+  - id: curtain
+    name: Curtain
+    prompt: a photo of curtains
+    enabled: true
+  - id: door
+    name: Door
+    prompt: a photo of a door
+    enabled: true
+  - id: window
+    name: Window
+    prompt: a photo of a window
+    enabled: true
+  - id: television
+    name: Television
+    prompt: a photo of a television
+    enabled: true
+  - id: remote_control
+    name: Remote Control
+    prompt: a photo of a remote control
+    enabled: true
+  - id: refrigerator
+    name: Refrigerator
+    prompt: a photo of a refrigerator
+    enabled: true
+  - id: oven
+    name: Oven
+    prompt: a photo of an oven
+    enabled: true
+  - id: microwave
+    name: Microwave
+    prompt: a photo of a microwave oven
+    enabled: true
+  - id: toaster
+    name: Toaster
+    prompt: a photo of a toaster
+    enabled: true
+  - id: sink
+    name: Sink
+    prompt: a photo of a sink
+    enabled: true
+  - id: toilet
+    name: Toilet
+    prompt: a photo of a toilet
+    enabled: true
+  - id: bathtub
+    name: Bathtub
+    prompt: a photo of a bathtub
+    enabled: true
+  - id: shower
+    name: Shower
+    prompt: a photo of a shower
+    enabled: true
+  - id: washing_machine
+    name: Washing Machine
+    prompt: a photo of a washing machine
+    enabled: true
+  - id: fan
+    name: Fan
+    prompt: a photo of a fan
+    enabled: true
+  - id: air_conditioner
+    name: Air Conditioner
+    prompt: a photo of an air conditioner
+    enabled: true
+  - id: trash_can
+    name: Trash Can
+    prompt: a photo of a trash can
+    enabled: true
+  - id: basket
+    name: Basket
+    prompt: a photo of a basket
+    enabled: true
+
+  # Electronics and office
+  - id: smartphone
+    name: Smartphone
+    prompt: a photo of a smartphone
+    enabled: true
+  - id: telephone
+    name: Telephone
+    prompt: a photo of a telephone
+    enabled: true
+  - id: laptop
+    name: Laptop
+    prompt: a photo of a laptop computer
+    enabled: true
+  - id: desktop_computer
+    name: Desktop Computer
+    prompt: a photo of a desktop computer
+    enabled: true
+  - id: computer_monitor
+    name: Computer Monitor
+    prompt: a photo of a computer monitor
+    enabled: true
+  - id: keyboard
+    name: Keyboard
+    prompt: a photo of a computer keyboard
+    enabled: true
+  - id: computer_mouse
+    name: Computer Mouse
+    prompt: a photo of a computer mouse
+    enabled: true
+  - id: tablet
+    name: Tablet
+    prompt: a photo of a tablet computer
+    enabled: true
+  - id: camera
+    name: Camera
+    prompt: a photo of a camera
+    enabled: true
+  - id: headphones
+    name: Headphones
+    prompt: a photo of headphones
+    enabled: true
+  - id: speaker
+    name: Speaker
+    prompt: a photo of a speaker
+    enabled: true
+  - id: microphone
+    name: Microphone
+    prompt: a photo of a microphone
+    enabled: true
+  - id: printer
+    name: Printer
+    prompt: a photo of a printer
+    enabled: true
+  - id: router
+    name: Router
+    prompt: a photo of a wireless router
+    enabled: true
+  - id: game_controller
+    name: Game Controller
+    prompt: a photo of a game controller
+    enabled: true
+  - id: book
+    name: Book
+    prompt: a photo of a book
+    enabled: true
+  - id: notebook
+    name: Notebook
+    prompt: a photo of a notebook
+    enabled: true
+  - id: pen
+    name: Pen
+    prompt: a photo of a pen
+    enabled: true
+  - id: pencil
+    name: Pencil
+    prompt: a photo of a pencil
+    enabled: true
+  - id: scissors
+    name: Scissors
+    prompt: a photo of scissors
+    enabled: true
+
+  # Food and drink
+  - id: apple
+    name: Apple
+    prompt: a photo of an apple
+    enabled: true
+  - id: banana
+    name: Banana
+    prompt: a photo of a banana
+    enabled: true
+  - id: orange
+    name: Orange
+    prompt: a photo of an orange fruit
+    enabled: true
+  - id: lemon
+    name: Lemon
+    prompt: a photo of a lemon
+    enabled: true
+  - id: strawberry
+    name: Strawberry
+    prompt: a photo of a strawberry
+    enabled: true
+  - id: grape
+    name: Grape
+    prompt: a photo of grapes
+    enabled: true
+  - id: watermelon
+    name: Watermelon
+    prompt: a photo of a watermelon
+    enabled: true
+  - id: pineapple
+    name: Pineapple
+    prompt: a photo of a pineapple
+    enabled: true
+  - id: mango
+    name: Mango
+    prompt: a photo of a mango
+    enabled: true
+  - id: avocado
+    name: Avocado
+    prompt: a photo of an avocado
+    enabled: true
+  - id: tomato
+    name: Tomato
+    prompt: a photo of a tomato
+    enabled: true
+  - id: carrot
+    name: Carrot
+    prompt: a photo of a carrot
+    enabled: true
+  - id: broccoli
+    name: Broccoli
+    prompt: a photo of broccoli
+    enabled: true
+  - id: corn
+    name: Corn
+    prompt: a photo of corn
+    enabled: true
+  - id: potato
+    name: Potato
+    prompt: a photo of a potato
+    enabled: true
+  - id: mushroom
+    name: Mushroom
+    prompt: a photo of a mushroom
+    enabled: true
+  - id: salad
+    name: Salad
+    prompt: a photo of a salad
+    enabled: true
+  - id: bread
+    name: Bread
+    prompt: a photo of bread
+    enabled: true
+  - id: sandwich
+    name: Sandwich
+    prompt: a photo of a sandwich
+    enabled: true
+  - id: hamburger
+    name: Hamburger
+    prompt: a photo of a hamburger
+    enabled: true
+  - id: hot_dog
+    name: Hot Dog
+    prompt: a photo of a hot dog
+    enabled: true
+  - id: pizza
+    name: Pizza
+    prompt: a photo of pizza
+    enabled: true
+  - id: pasta
+    name: Pasta
+    prompt: a photo of pasta
+    enabled: true
+  - id: rice
+    name: Rice
+    prompt: a photo of rice
+    enabled: true
+  - id: noodles
+    name: Noodles
+    prompt: a photo of noodles
+    enabled: true
+  - id: soup
+    name: Soup
+    prompt: a photo of soup
+    enabled: true
+  - id: steak
+    name: Steak
+    prompt: a photo of steak
+    enabled: true
+  - id: chicken_food
+    name: Chicken Food
+    prompt: a photo of cooked chicken food
+    enabled: true
+  - id: fish_food
+    name: Fish Food
+    prompt: a photo of cooked fish food
+    enabled: true
+  - id: sushi
+    name: Sushi
+    prompt: a photo of sushi
+    enabled: true
+  - id: taco
+    name: Taco
+    prompt: a photo of a taco
+    enabled: true
+  - id: egg
+    name: Egg
+    prompt: a photo of an egg
+    enabled: true
+  - id: cheese
+    name: Cheese
+    prompt: a photo of cheese
+    enabled: true
+  - id: cake
+    name: Cake
+    prompt: a photo of a cake
+    enabled: true
+  - id: cookie
+    name: Cookie
+    prompt: a photo of a cookie
+    enabled: true
+  - id: ice_cream
+    name: Ice Cream
+    prompt: a photo of ice cream
+    enabled: true
+  - id: chocolate
+    name: Chocolate
+    prompt: a photo of chocolate
+    enabled: true
+  - id: coffee
+    name: Coffee
+    prompt: a photo of coffee
+    enabled: true
+  - id: tea
+    name: Tea
+    prompt: a photo of tea
+    enabled: true
+  - id: juice
+    name: Juice
+    prompt: a photo of juice
+    enabled: true
+  - id: beer
+    name: Beer
+    prompt: a photo of beer
+    enabled: true
+  - id: wine
+    name: Wine
+    prompt: a photo of wine
+    enabled: true
+  - id: water_bottle
+    name: Water Bottle
+    prompt: a photo of a water bottle
+    enabled: true
+
+  # Kitchen and household objects
+  - id: plate
+    name: Plate
+    prompt: a photo of a plate
+    enabled: true
+  - id: bowl
+    name: Bowl
+    prompt: a photo of a bowl
+    enabled: true
+  - id: cup
+    name: Cup
+    prompt: a photo of a cup
+    enabled: true
+  - id: mug
+    name: Mug
+    prompt: a photo of a mug
+    enabled: true
+  - id: fork
+    name: Fork
+    prompt: a photo of a fork
+    enabled: true
+  - id: spoon
+    name: Spoon
+    prompt: a photo of a spoon
+    enabled: true
+  - id: knife
+    name: Knife
+    prompt: a photo of a knife
+    enabled: true
+  - id: bottle
+    name: Bottle
+    prompt: a photo of a bottle
+    enabled: true
+  - id: can
+    name: Can
+    prompt: a photo of a can
+    enabled: true
+  - id: pan
+    name: Pan
+    prompt: a photo of a cooking pan
+    enabled: true
+  - id: pot
+    name: Pot
+    prompt: a photo of a cooking pot
+    enabled: true
+  - id: kettle
+    name: Kettle
+    prompt: a photo of a kettle
+    enabled: true
+  - id: cutting_board
+    name: Cutting Board
+    prompt: a photo of a cutting board
+    enabled: true
+
+  # Tools and hardware
+  - id: hammer
+    name: Hammer
+    prompt: a photo of a hammer
+    enabled: true
+  - id: screwdriver
+    name: Screwdriver
+    prompt: a photo of a screwdriver
+    enabled: true
+  - id: wrench
+    name: Wrench
+    prompt: a photo of a wrench
+    enabled: true
+  - id: pliers
+    name: Pliers
+    prompt: a photo of pliers
+    enabled: true
+  - id: saw
+    name: Saw
+    prompt: a photo of a saw
+    enabled: true
+  - id: drill
+    name: Drill
+    prompt: a photo of a power drill
+    enabled: true
+  - id: ladder
+    name: Ladder
+    prompt: a photo of a ladder
+    enabled: true
+  - id: flashlight
+    name: Flashlight
+    prompt: a photo of a flashlight
+    enabled: true
+  - id: lock
+    name: Lock
+    prompt: a photo of a lock
+    enabled: true
+  - id: key
+    name: Key
+    prompt: a photo of a key
+    enabled: true
+
+  # Sports, toys, and instruments
+  - id: ball
+    name: Ball
+    prompt: a photo of a ball
+    enabled: true
+  - id: soccer_ball
+    name: Soccer Ball
+    prompt: a photo of a soccer ball
+    enabled: true
+  - id: basketball
+    name: Basketball
+    prompt: a photo of a basketball
+    enabled: true
+  - id: baseball
+    name: Baseball
+    prompt: a photo of a baseball
+    enabled: true
+  - id: tennis_ball
+    name: Tennis Ball
+    prompt: a photo of a tennis ball
+    enabled: true
+  - id: golf_ball
+    name: Golf Ball
+    prompt: a photo of a golf ball
+    enabled: true
+  - id: racket
+    name: Racket
+    prompt: a photo of a sports racket
+    enabled: true
+  - id: surfboard
+    name: Surfboard
+    prompt: a photo of a surfboard
+    enabled: true
+  - id: skis
+    name: Skis
+    prompt: a photo of skis
+    enabled: true
+  - id: snowboard
+    name: Snowboard
+    prompt: a photo of a snowboard
+    enabled: true
+  - id: dumbbell
+    name: Dumbbell
+    prompt: a photo of a dumbbell
+    enabled: true
+  - id: toy
+    name: Toy
+    prompt: a photo of a toy
+    enabled: true
+  - id: teddy_bear
+    name: Teddy Bear
+    prompt: a photo of a teddy bear
+    enabled: true
+  - id: doll
+    name: Doll
+    prompt: a photo of a doll
+    enabled: true
+  - id: guitar
+    name: Guitar
+    prompt: a photo of a guitar
+    enabled: true
+  - id: piano
+    name: Piano
+    prompt: a photo of a piano
+    enabled: true
+  - id: violin
+    name: Violin
+    prompt: a photo of a violin
+    enabled: true
+  - id: drum
+    name: Drum
+    prompt: a photo of a drum
+    enabled: true
+
+  # Plants, nature, and outdoor objects
+  - id: tree
+    name: Tree
+    prompt: a photo of a tree
+    enabled: true
+  - id: flower
+    name: Flower
+    prompt: a photo of a flower
+    enabled: true
+  - id: plant
+    name: Plant
+    prompt: a photo of a plant
+    enabled: true
+  - id: grass
+    name: Grass
+    prompt: a photo of grass
+    enabled: true
+  - id: leaf
+    name: Leaf
+    prompt: a photo of a leaf
+    enabled: true
+  - id: cactus
+    name: Cactus
+    prompt: a photo of a cactus
+    enabled: true
+  - id: forest
+    name: Forest
+    prompt: a photo of a forest
+    enabled: true
+  - id: mountain
+    name: Mountain
+    prompt: a photo of a mountain
+    enabled: true
+  - id: beach
+    name: Beach
+    prompt: a photo of a beach
+    enabled: true
+  - id: ocean
+    name: Ocean
+    prompt: a photo of the ocean
+    enabled: true
+  - id: river
+    name: River
+    prompt: a photo of a river
+    enabled: true
+  - id: lake
+    name: Lake
+    prompt: a photo of a lake
+    enabled: true
+  - id: waterfall
+    name: Waterfall
+    prompt: a photo of a waterfall
+    enabled: true
+  - id: rock
+    name: Rock
+    prompt: a photo of a rock
+    enabled: true
+  - id: snow
+    name: Snow
+    prompt: a photo of snow
+    enabled: true
+  - id: cloud
+    name: Cloud
+    prompt: a photo of clouds
+    enabled: true
+  - id: sky
+    name: Sky
+    prompt: a photo of the sky
+    enabled: true
+  - id: fire
+    name: Fire
+    prompt: a photo of fire
+    enabled: true
+
+  # Places, structures, and signs
+  - id: building
+    name: Building
+    prompt: a photo of a building
+    enabled: true
+  - id: house
+    name: House
+    prompt: a photo of a house
+    enabled: true
+  - id: apartment_building
+    name: Apartment Building
+    prompt: a photo of an apartment building
+    enabled: true
+  - id: skyscraper
+    name: Skyscraper
+    prompt: a photo of a skyscraper
+    enabled: true
+  - id: bridge
+    name: Bridge
+    prompt: a photo of a bridge
+    enabled: true
+  - id: road
+    name: Road
+    prompt: a photo of a road
+    enabled: true
+  - id: street
+    name: Street
+    prompt: a photo of a street
+    enabled: true
+  - id: traffic_light
+    name: Traffic Light
+    prompt: a photo of a traffic light
+    enabled: true
+  - id: stop_sign
+    name: Stop Sign
+    prompt: a photo of a stop sign
+    enabled: true
+  - id: sign
+    name: Sign
+    prompt: a photo of a sign
+    enabled: true
+  - id: fence
+    name: Fence
+    prompt: a photo of a fence
+    enabled: true
+  - id: bench
+    name: Bench
+    prompt: a photo of a bench
+    enabled: true
+  - id: fountain
+    name: Fountain
+    prompt: a photo of a fountain
+    enabled: true
+  - id: playground
+    name: Playground
+    prompt: a photo of a playground
+    enabled: true
+  - id: swimming_pool
+    name: Swimming Pool
+    prompt: a photo of a swimming pool
+    enabled: true
+  - id: tent
+    name: Tent
+    prompt: a photo of a tent
+    enabled: true

@@ -1,0 +1,90 @@
+# CLIP Classifier Service
+
+FastAPI service for zero-shot image classification with `hf-hub:apple/DFN5B-CLIP-ViT-H-14-378`.
+
+## Hardware status on this machine
+
+- GPU: NVIDIA GeForce RTX 4090, 24564 MiB VRAM
+- RAM: about 128 GB
+- Disk: about 1.1 TB free on `C:`
+- CUDA through PyTorch: verified with `torch 2.2.2+cu121`
+
+## Setup
+
+```powershell
+cd C:\Users\Admin\workspace\AI\clip-classifier-service
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pip install -e . --no-deps
+Copy-Item .env.example .env
+```
+
+Edit `config/labels.yaml` for the production label set before exposing the service.
+
+## Verify CUDA
+
+```powershell
+.\.venv\Scripts\python.exe scripts\check_cuda.py
+```
+
+## Preload model
+
+This downloads the model to `models/` on first run and initializes text features for the configured labels.
+Set `HF_TOKEN` before this step if you need higher Hugging Face download limits.
+
+```powershell
+.\.venv\Scripts\python.exe scripts\preload_model.py
+```
+
+## Run
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn clip_classifier_service.main:app --host 0.0.0.0 --port 8000 --workers 1
+```
+
+Use one worker per GPU. Multiple Uvicorn workers will load multiple model copies and can exhaust VRAM.
+
+To serve every API under a prefix such as `/openai-clip`, set:
+
+```powershell
+$env:CLIP_BASE_PATH="/openai-clip"
+```
+
+## Install as Windows service
+
+Install NSSM first, then run:
+
+```powershell
+New-Item -ItemType Directory -Force logs
+.\scripts\install_windows_service.ps1 -ServiceName ClipClassifierService -Port 8000
+Start-Service ClipClassifierService
+```
+
+## API
+
+- `GET /healthz`
+- `GET /readyz`
+- `GET /metrics`
+- `POST /v1/classify` with `multipart/form-data` field `file`, optional `top_k`, optional `threshold`
+- `POST /v1/classify/batch` with repeated `multipart/form-data` field `files`, optional `top_k`, optional `threshold`
+
+If `CLIP_BASE_PATH=/openai-clip`, these become `/openai-clip/healthz`, `/openai-clip/readyz`, `/openai-clip/metrics`, `/openai-clip/v1/classify`, and `/openai-clip/v1/classify/batch`.
+
+Example:
+
+```powershell
+curl.exe -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/v1/classify?top_k=3"
+```
+
+Batch example:
+
+```powershell
+curl.exe -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
+```
+
+## Production notes
+
+- Put this service behind an internal gateway or reverse proxy for TLS, authentication, and rate limiting.
+- Keep `CLIP_MAX_IMAGE_BYTES`, `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`, and `CLIP_MAX_IMAGE_PIXELS` conservative to prevent upload, decompression, and memory abuse.
+- Pre-download model weights during deployment, not on first live request.
+- Monitor `/metrics` for latency, request status, and error rates.

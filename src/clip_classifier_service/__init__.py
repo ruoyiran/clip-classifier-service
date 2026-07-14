@@ -1,0 +1,1 @@
+"""OpenCLIP image classification service."""
