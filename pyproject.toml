@@ -12,6 +12,8 @@ dependencies = [
   "pillow>=10.3,<11.0",
   "pyyaml>=6.0,<7.0",
   "prometheus-client>=0.20,<1.0",
+  "pynacl>=1.5,<2.0",
+  "cryptography>=42,<50",
   "open-clip-torch>=2.24,<3.0",
   "torch==2.2.2+cu121",
   "torchvision==0.17.2+cu121",

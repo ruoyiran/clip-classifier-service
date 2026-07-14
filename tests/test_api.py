@@ -6,6 +6,7 @@ from fastapi.testclient import TestClient
 
 from clip_classifier_service.api import create_app
 from clip_classifier_service.classifier import ClassificationResult, ScoredLabel
+from clip_classifier_service.encryption import encrypt_image_for_server, generate_key_pair
 from clip_classifier_service.settings import Settings
 
 
@@ -84,6 +85,121 @@ def test_classify_endpoint_returns_top_labels(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert response.json()["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
+
+
+def test_public_key_endpoint_returns_encryption_metadata(tmp_path: Path) -> None:
+    key_pair = generate_key_pair()
+    public_key_path = tmp_path / "server_public.key"
+    private_key_path = tmp_path / "server_private.key"
+    public_key_path.write_text(key_pair.public_key_b64, encoding="ascii")
+    private_key_path.write_text(key_pair.private_key_b64, encoding="ascii")
+    settings = Settings(
+        model_cache_dir=tmp_path,
+        encryption_enabled=True,
+        encryption_public_key_path=public_key_path,
+        encryption_private_key_path=private_key_path,
+    )
+    app = create_app(settings, classifier=FakeClassifier())
+    client = TestClient(app)
+
+    response = client.get("/v1/encryption/public-key")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "alg": "AES-256-GCM+SealedBox-v1",
+        "public_key": key_pair.public_key_b64,
+    }
+
+
+def test_encrypted_classify_endpoint_returns_top_labels(tmp_path: Path) -> None:
+    key_pair = generate_key_pair()
+    private_key_path = tmp_path / "server_private.key"
+    private_key_path.write_text(key_pair.private_key_b64, encoding="ascii")
+    settings = Settings(
+        model_cache_dir=tmp_path,
+        encryption_enabled=True,
+        encryption_private_key_path=private_key_path,
+    )
+    app = create_app(settings, classifier=FakeClassifier())
+    client = TestClient(app)
+    payload = encrypt_image_for_server(key_pair.public_key_b64, b"fake-image")
+
+    response = client.post(
+        "/v1/classify/encrypted",
+        params={"top_k": 1, "threshold": 0.25},
+        json=payload,
+    )
+
+    assert response.status_code == 200
+    assert response.json()["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
+
+
+def test_encrypted_classify_rejects_tampered_payload(tmp_path: Path) -> None:
+    key_pair = generate_key_pair()
+    private_key_path = tmp_path / "server_private.key"
+    private_key_path.write_text(key_pair.private_key_b64, encoding="ascii")
+    settings = Settings(
+        model_cache_dir=tmp_path,
+        encryption_enabled=True,
+        encryption_private_key_path=private_key_path,
+    )
+    app = create_app(settings, classifier=FakeClassifier())
+    client = TestClient(app)
+    payload = encrypt_image_for_server(key_pair.public_key_b64, b"fake-image")
+    payload["ciphertext"] = payload["ciphertext"][:-2] + "AA"
+
+    response = client.post("/v1/classify/encrypted", json=payload)
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "invalid encrypted payload"
+
+
+def test_encrypted_batch_classify_returns_per_image_results(tmp_path: Path) -> None:
+    key_pair = generate_key_pair()
+    private_key_path = tmp_path / "server_private.key"
+    private_key_path.write_text(key_pair.private_key_b64, encoding="ascii")
+    settings = Settings(
+        model_cache_dir=tmp_path,
+        encryption_enabled=True,
+        encryption_private_key_path=private_key_path,
+        max_batch_size=2,
+    )
+    app = create_app(settings, classifier=FakeClassifier())
+    client = TestClient(app)
+    encrypted = encrypt_image_for_server(key_pair.public_key_b64, b"fake-image")
+
+    response = client.post(
+        "/v1/classify/batch/encrypted",
+        params={"top_k": 1, "threshold": 0.25},
+        json={
+            "items": [
+                {"filename": "one.jpg", **encrypted},
+                {"filename": "two.jpg", **encrypted},
+            ]
+        },
+    )
+
+    assert response.status_code == 200
+    assert [item["filename"] for item in response.json()["results"]] == ["one.jpg", "two.jpg"]
+    assert response.json()["results"][0]["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
+
+
+def test_require_encrypted_uploads_rejects_plaintext_classify(tmp_path: Path) -> None:
+    settings = Settings(
+        model_cache_dir=tmp_path,
+        encryption_enabled=True,
+        require_encrypted_uploads=True,
+    )
+    app = create_app(settings, classifier=FakeClassifier())
+    client = TestClient(app)
+
+    response = client.post(
+        "/v1/classify",
+        params={"top_k": 1, "threshold": 0.25},
+        files={"file": ("image.jpg", b"fake-image", "image/jpeg")},
+    )
+
+    assert response.status_code == 403
 
 
 def test_classify_rejects_oversized_images(tmp_path: Path) -> None:

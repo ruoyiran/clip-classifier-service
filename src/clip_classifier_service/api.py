@@ -8,8 +8,14 @@ from uuid import uuid4
 from fastapi import APIRouter, FastAPI, File, HTTPException, Query, Request, UploadFile
 from fastapi.responses import Response
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+from pydantic import BaseModel
 
 from clip_classifier_service.classifier import ClipClassifier
+from clip_classifier_service.encryption import (
+    ENCRYPTION_ALGORITHM,
+    decrypt_encrypted_image_payload,
+    read_key_b64,
+)
 from clip_classifier_service.labels import load_labels
 from clip_classifier_service.metrics import INFERENCE_SECONDS, REQUESTS
 from clip_classifier_service.openclip_backend import OpenClipBackend, ensure_model_cache_dir
@@ -21,6 +27,18 @@ def create_classifier(settings: Settings) -> ClipClassifier:
     labels = load_labels(settings.labels_path)
     backend = OpenClipBackend(settings)
     return ClipClassifier(labels=labels, backend=backend, model_name=settings.model_name)
+
+
+class EncryptedImagePayload(BaseModel):
+    alg: str
+    encrypted_key: str
+    nonce: str
+    ciphertext: str
+    filename: str | None = None
+
+
+class EncryptedBatchPayload(BaseModel):
+    items: list[EncryptedImagePayload]
 
 
 async def read_upload_limited(file: UploadFile, limit: int) -> bytes:
@@ -43,6 +61,24 @@ def serialize_result(result):
             for label in result.labels
         ],
     }
+
+
+def encrypted_payload_to_dict(payload: EncryptedImagePayload) -> dict[str, str]:
+    return {
+        "alg": payload.alg,
+        "encrypted_key": payload.encrypted_key,
+        "nonce": payload.nonce,
+        "ciphertext": payload.ciphertext,
+    }
+
+
+def get_encryption_private_key(settings: Settings) -> str:
+    if not settings.encryption_enabled:
+        raise HTTPException(status_code=404, detail="encrypted uploads are not enabled")
+    try:
+        return read_key_b64(settings.encryption_private_key_path)
+    except ValueError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 
 def create_app(
@@ -81,11 +117,17 @@ def create_app(
                 parsed_content_length = int(content_length) if content_length else None
             except ValueError:
                 return Response(content="invalid content-length", status_code=400)
-            max_body_bytes = (
-                (settings.max_image_bytes + settings.max_multipart_overhead_bytes)
-                * settings.max_batch_size
-                if request.url.path.endswith("/batch")
+            encrypted_request = request.url.path.endswith("/encrypted")
+            batch_request = request.url.path.endswith("/batch") or request.url.path.endswith(
+                "/batch/encrypted"
+            )
+            per_image_limit = (
+                settings.max_encrypted_image_bytes
+                if encrypted_request
                 else settings.max_image_bytes + settings.max_multipart_overhead_bytes
+            )
+            max_body_bytes = (
+                per_image_limit * settings.max_batch_size if batch_request else per_image_limit
             )
             if parsed_content_length and parsed_content_length > max_body_bytes:
                 return Response(content="request body too large", status_code=413)
@@ -106,12 +148,24 @@ def create_app(
     def metrics() -> Response:
         return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
+    @router.get("/v1/encryption/public-key")
+    def encryption_public_key() -> dict[str, str]:
+        if not settings.encryption_enabled:
+            raise HTTPException(status_code=404, detail="encrypted uploads are not enabled")
+        try:
+            public_key = read_key_b64(settings.encryption_public_key_path)
+        except ValueError as exc:
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        return {"alg": ENCRYPTION_ALGORITHM, "public_key": public_key}
+
     @router.post("/v1/classify")
     async def classify(
         file: Annotated[UploadFile, File()],
         top_k: Annotated[int, Query(ge=1, le=100)] = settings.default_top_k,
         threshold: Annotated[float, Query(ge=0.0, le=1.0)] = settings.default_threshold,
     ):
+        if settings.require_encrypted_uploads:
+            raise HTTPException(status_code=403, detail="encrypted uploads are required")
         if file.size is not None and file.size > settings.max_image_bytes:
             REQUESTS.labels(endpoint="/v1/classify", status="too_large").inc()
             raise HTTPException(status_code=413, detail="image exceeds max_image_bytes")
@@ -137,12 +191,53 @@ def create_app(
         REQUESTS.labels(endpoint="/v1/classify", status="ok").inc()
         return serialize_result(result)
 
+    @router.post("/v1/classify/encrypted")
+    async def classify_encrypted(
+        payload: EncryptedImagePayload,
+        top_k: Annotated[int, Query(ge=1, le=100)] = settings.default_top_k,
+        threshold: Annotated[float, Query(ge=0.0, le=1.0)] = settings.default_threshold,
+    ):
+        current = state.get("classifier")
+        if current is None or not getattr(current, "ready", False):
+            REQUESTS.labels(endpoint="/v1/classify/encrypted", status="not_ready").inc()
+            raise HTTPException(status_code=503, detail="model is not ready")
+
+        try:
+            image_bytes = decrypt_encrypted_image_payload(
+                encrypted_payload_to_dict(payload),
+                get_encryption_private_key(settings),
+            )
+        except ValueError as exc:
+            REQUESTS.labels(endpoint="/v1/classify/encrypted", status="bad_request").inc()
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+        if len(image_bytes) > settings.max_image_bytes:
+            REQUESTS.labels(endpoint="/v1/classify/encrypted", status="too_large").inc()
+            raise HTTPException(status_code=413, detail="image exceeds max_image_bytes")
+
+        try:
+            async with gpu_semaphore:
+                with INFERENCE_SECONDS.time():
+                    result = await asyncio.to_thread(
+                        current.classify,
+                        image_bytes=image_bytes,
+                        top_k=top_k,
+                        threshold=threshold,
+                    )
+        except ValueError as exc:
+            REQUESTS.labels(endpoint="/v1/classify/encrypted", status="bad_request").inc()
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        REQUESTS.labels(endpoint="/v1/classify/encrypted", status="ok").inc()
+        return serialize_result(result)
+
     @router.post("/v1/classify/batch")
     async def classify_batch(
         files: Annotated[list[UploadFile], File()],
         top_k: Annotated[int, Query(ge=1, le=100)] = settings.default_top_k,
         threshold: Annotated[float, Query(ge=0.0, le=1.0)] = settings.default_threshold,
     ):
+        if settings.require_encrypted_uploads:
+            raise HTTPException(status_code=403, detail="encrypted uploads are required")
         if len(files) > settings.max_batch_size:
             REQUESTS.labels(endpoint="/v1/classify/batch", status="too_many").inc()
             raise HTTPException(status_code=413, detail="batch exceeds max_batch_size")
@@ -190,6 +285,60 @@ def create_app(
             results.append(item)
 
         REQUESTS.labels(endpoint="/v1/classify/batch", status="ok").inc()
+        return {"results": results}
+
+    @router.post("/v1/classify/batch/encrypted")
+    async def classify_batch_encrypted(
+        payload: EncryptedBatchPayload,
+        top_k: Annotated[int, Query(ge=1, le=100)] = settings.default_top_k,
+        threshold: Annotated[float, Query(ge=0.0, le=1.0)] = settings.default_threshold,
+    ):
+        if len(payload.items) > settings.max_batch_size:
+            REQUESTS.labels(endpoint="/v1/classify/batch/encrypted", status="too_many").inc()
+            raise HTTPException(status_code=413, detail="batch exceeds max_batch_size")
+
+        current = state.get("classifier")
+        if current is None or not getattr(current, "ready", False):
+            REQUESTS.labels(endpoint="/v1/classify/batch/encrypted", status="not_ready").inc()
+            raise HTTPException(status_code=503, detail="model is not ready")
+
+        private_key_b64 = get_encryption_private_key(settings)
+        image_batch: list[bytes] = []
+        for item in payload.items:
+            try:
+                image_bytes = decrypt_encrypted_image_payload(
+                    encrypted_payload_to_dict(item),
+                    private_key_b64,
+                )
+            except ValueError as exc:
+                REQUESTS.labels(endpoint="/v1/classify/batch/encrypted", status="bad_request").inc()
+                raise HTTPException(status_code=400, detail=str(exc)) from exc
+            if len(image_bytes) > settings.max_image_bytes:
+                REQUESTS.labels(endpoint="/v1/classify/batch/encrypted", status="too_large").inc()
+                raise HTTPException(status_code=413, detail="image exceeds max_image_bytes")
+            image_batch.append(image_bytes)
+
+        try:
+            with INFERENCE_SECONDS.time():
+                async with gpu_semaphore:
+                    batch_results = await asyncio.to_thread(
+                        current.classify_batch,
+                        image_batch=image_batch,
+                        top_k=top_k,
+                        threshold=threshold,
+                    )
+        except ValueError as exc:
+            REQUESTS.labels(endpoint="/v1/classify/batch/encrypted", status="bad_request").inc()
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+        results = []
+        for item, result in zip(payload.items, batch_results, strict=True):
+            serialized = serialize_result(result)
+            if item.filename is not None:
+                serialized["filename"] = item.filename
+            results.append(serialized)
+
+        REQUESTS.labels(endpoint="/v1/classify/batch/encrypted", status="ok").inc()
         return {"results": results}
 
     app.include_router(router, prefix=settings.base_path)

@@ -8,6 +8,7 @@
 - `labels.py`: YAML label loader and validation for fixed-label classifier configuration.
 - `classifier.py`: Model-agnostic classification logic, text feature cache, single-image and batch ranking.
 - `openclip_backend.py`: OpenCLIP/PyTorch backend, model loading, image decoding, pixel safety limits, single and batch image encoding.
+- `encryption.py`: AES-256-GCM image encryption helpers, libsodium SealedBox key wrapping, and key generation.
 - `metrics.py`: Prometheus counters and inference latency histogram.
 - `__init__.py`: Package marker.
 
@@ -17,6 +18,7 @@
 - `test_classifier.py`: Ranking, threshold filtering, and true batch classifier behavior with a fake backend.
 - `test_labels.py`: Label YAML parsing, disabled labels, duplicate IDs, and empty enabled set validation.
 - `test_settings.py`: Settings defaults and validation.
+- `test_encryption.py`: Hybrid encryption round trip and tamper rejection.
 
 ## Configuration
 
@@ -30,6 +32,8 @@
 
 - `scripts/check_cuda.py`: Verifies PyTorch CUDA access and runs a small GPU tensor operation.
 - `scripts/preload_model.py`: Downloads/loads model and labels, then reports readiness.
+- `scripts/generate_encryption_keys.py`: Generates service public/private encryption key files.
+- `scripts/encrypt_sample_image.py`: Encrypts a local image and calls the encrypted classification API.
 - `scripts/start.ps1`: Installs runtime dependencies and starts Uvicorn with one worker.
 - `scripts/install_windows_service.ps1`: Installs the service through NSSM and configures log files.
 

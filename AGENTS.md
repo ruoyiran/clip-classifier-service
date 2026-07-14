@@ -78,12 +78,14 @@ Do not increase `--workers` on a single GPU unless the memory impact has been me
 - If changing API behavior, update tests and `docs/`.
 - If changing runtime settings, update `.env.example`, `README.md`, and `docs/OPERATIONS.md`.
 - If `CLIP_BASE_PATH` is configured, all route examples and tests must include that prefix.
+- Never commit service encryption private keys or generated key files.
 
 ## Production Safety Constraints
 
 - Enforce upload byte limits with both request-level and per-file checks.
 - Preserve `CLIP_MAX_IMAGE_PIXELS` protection to avoid decompression abuse.
 - Keep invalid image payloads as 4xx responses, not 500s.
+- Keep invalid encrypted payloads as 4xx responses, not 500s.
 - Preserve single-GPU backpressure through the semaphore in `api.py`.
 - Keep model downloads out of first live traffic by using `scripts/preload_model.py`.
 - Expose the service behind an internal gateway or reverse proxy for TLS, auth, and rate limits.

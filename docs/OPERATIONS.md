@@ -23,11 +23,26 @@ All service settings can be provided with `CLIP_` environment variables.
 - `CLIP_DEVICE`: Runtime device. Default: `cuda`.
 - `CLIP_PRECISION`: `fp16` or `fp32`. Default: `fp16`.
 - `CLIP_MAX_IMAGE_BYTES`: Per-image upload byte limit.
+- `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`: Per-image encrypted JSON payload limit.
 - `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`: Request body overhead allowance.
 - `CLIP_MAX_IMAGE_PIXELS`: Decoded image pixel limit.
 - `CLIP_MAX_BATCH_SIZE`: Max images per batch request.
 - `CLIP_DEFAULT_TOP_K`: Default number of labels returned.
 - `CLIP_DEFAULT_THRESHOLD`: Default score threshold.
+- `CLIP_ENCRYPTION_ENABLED`: Enables encrypted upload endpoints.
+- `CLIP_REQUIRE_ENCRYPTED_UPLOADS`: Rejects plaintext classify endpoints when enabled.
+- `CLIP_ENCRYPTION_PRIVATE_KEY_PATH`: Service private key path.
+- `CLIP_ENCRYPTION_PUBLIC_KEY_PATH`: Service public key path.
+
+## Encryption Keys
+
+Generate keys once per deployment:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\generate_encryption_keys.py
+```
+
+Do not commit `config/server_private.key` or `config/server_public.key`.
 
 ## Verification
 
@@ -69,6 +84,7 @@ curl.exe http://127.0.0.1:8000/readyz
 curl.exe http://127.0.0.1:8000/metrics
 curl.exe -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/v1/classify?top_k=3"
 curl.exe -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
+.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000
 ```
 
 If `CLIP_BASE_PATH=/openai-clip`, include that prefix in every URL:
@@ -82,6 +98,7 @@ curl.exe -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/openai-clip/v1/clas
 
 - Replace default labels with the real production label set.
 - Preload model weights during deployment.
+- Generate encryption keys before setting `CLIP_ENCRYPTION_ENABLED=true`.
 - Put the service behind an internal gateway or reverse proxy.
 - Enforce TLS, authentication, and rate limiting upstream.
 - Keep `--workers 1` per GPU unless measured otherwise.

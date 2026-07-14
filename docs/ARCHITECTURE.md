@@ -10,7 +10,7 @@ Serve `hf-hub:apple/DFN5B-CLIP-ViT-H-14-378` as a fixed-label image classificati
 2. `load_labels()` reads `config/labels.yaml` and returns enabled labels only.
 3. `OpenClipBackend` loads OpenCLIP model weights and preprocessing transforms.
 4. `ClipClassifier` encodes all label prompts once and keeps normalized text features in memory.
-5. FastAPI serves classification, health, readiness, and Prometheus metrics endpoints.
+5. FastAPI serves classification, health, readiness, encryption metadata, and Prometheus metrics endpoints.
    If `CLIP_BASE_PATH` is configured, every route is mounted under that prefix.
 
 ## Startup Flow
@@ -61,6 +61,22 @@ POST /v1/classify/batch, or POST <base_path>/v1/classify/batch when CLIP_BASE_PA
   -> per-image JSON results
 ```
 
+## Encrypted Request Flow
+
+```text
+GET /v1/encryption/public-key
+  -> returns AES-256-GCM+SealedBox-v1 and service public key
+
+POST /v1/classify/encrypted
+  -> content-length guard
+  -> JSON encrypted payload validation
+  -> SealedBox unwraps one-time AES key with service private key
+  -> AES-256-GCM decrypts image bytes
+  -> existing image safety checks and CLIP classification
+```
+
+Encrypted batch follows the same flow per item, then uses the existing batch classifier path.
+
 ## Concurrency Model
 
 The service uses one Uvicorn worker and a process-local `asyncio.Semaphore(1)` around GPU inference. Blocking PyTorch work is moved through `asyncio.to_thread()` so health, readiness, and metrics are less likely to be delayed by long inference.
@@ -70,6 +86,7 @@ Use one process per GPU unless memory and latency have been measured. Multiple U
 ## Safety Boundaries
 
 - `CLIP_MAX_IMAGE_BYTES`: Per-image upload byte limit.
+- `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`: Per-image encrypted payload byte limit.
 - `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`: Request body allowance for multipart overhead.
 - `CLIP_MAX_IMAGE_PIXELS`: Decoded pixel limit for Pillow.
 - Invalid image payloads are converted to `400`.
@@ -77,6 +94,7 @@ Use one process per GPU unless memory and latency have been measured. Multiple U
 - Query params are validated by FastAPI.
 
 TLS, authentication, global rate limiting, and public internet exposure are intentionally out of process and should be handled by an upstream gateway.
+Application-layer encryption protects uploaded images from accidental plaintext exposure inside intermediate components, but client authentication must still be handled separately.
 
 ## Observability
 

@@ -36,6 +36,20 @@ Set `HF_TOKEN` before this step if you need higher Hugging Face download limits.
 .\.venv\Scripts\python.exe scripts\preload_model.py
 ```
 
+## Encryption keys
+
+Encrypted upload endpoints use `AES-256-GCM+SealedBox-v1`. Generate service keys before enabling encrypted uploads:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\generate_encryption_keys.py
+```
+
+Then set:
+
+```powershell
+$env:CLIP_ENCRYPTION_ENABLED="true"
+```
+
 ## Run
 
 ```powershell
@@ -65,8 +79,11 @@ Start-Service ClipClassifierService
 - `GET /healthz`
 - `GET /readyz`
 - `GET /metrics`
+- `GET /v1/encryption/public-key`
 - `POST /v1/classify` with `multipart/form-data` field `file`, optional `top_k`, optional `threshold`
+- `POST /v1/classify/encrypted` with JSON encrypted payload, optional `top_k`, optional `threshold`
 - `POST /v1/classify/batch` with repeated `multipart/form-data` field `files`, optional `top_k`, optional `threshold`
+- `POST /v1/classify/batch/encrypted` with JSON encrypted payloads, optional `top_k`, optional `threshold`
 
 If `CLIP_BASE_PATH=/openai-clip`, these become `/openai-clip/healthz`, `/openai-clip/readyz`, `/openai-clip/metrics`, `/openai-clip/v1/classify`, and `/openai-clip/v1/classify/batch`.
 
@@ -82,9 +99,16 @@ Batch example:
 curl.exe -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
 ```
 
+Encrypted example:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000
+```
+
 ## Production notes
 
 - Put this service behind an internal gateway or reverse proxy for TLS, authentication, and rate limiting.
 - Keep `CLIP_MAX_IMAGE_BYTES`, `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`, and `CLIP_MAX_IMAGE_PIXELS` conservative to prevent upload, decompression, and memory abuse.
+- Keep `config/server_private.key` private and out of git.
 - Pre-download model weights during deployment, not on first live request.
 - Monitor `/metrics` for latency, request status, and error rates.

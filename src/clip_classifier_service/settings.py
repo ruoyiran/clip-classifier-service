@@ -22,15 +22,21 @@ class Settings(BaseSettings):
     port: int = 8000
     log_level: str = "info"
     max_image_bytes: int = 8 * 1024 * 1024
+    max_encrypted_image_bytes: int = 12 * 1024 * 1024
     max_multipart_overhead_bytes: int = 64 * 1024
     max_image_pixels: int = 16_000_000
     max_batch_size: int = 8
     default_top_k: int = 5
     default_threshold: float = 0.0
     service_name: str = "clip-classifier-service"
+    encryption_enabled: bool = False
+    require_encrypted_uploads: bool = False
+    encryption_private_key_path: Path = Path("config/server_private.key")
+    encryption_public_key_path: Path = Path("config/server_public.key")
 
     @field_validator(
         "max_image_bytes",
+        "max_encrypted_image_bytes",
         "max_image_pixels",
         "max_batch_size",
         "default_top_k",
