@@ -12,6 +12,7 @@ This directory contains the project handoff documentation for the CLIP classifie
 - `CODE_INDEX.md`: File-level source, test, and script map.
 - `ARCHITECTURE.md`: Service architecture, request flow, GPU execution model, and boundaries.
 - `OPERATIONS.md`: Environment setup, configuration, deployment, verification, and production notes.
+- `API_EXAMPLES.md`: curl, Python, and Go client examples for authenticated encrypted API calls.
 
 ## Common Workflows
 
