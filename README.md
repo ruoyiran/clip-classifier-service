@@ -50,6 +50,24 @@ Then set:
 $env:CLIP_ENCRYPTION_ENABLED="true"
 ```
 
+## API authentication
+
+Production deployments should enable static Bearer Token authentication:
+
+```powershell
+$env:CLIP_AUTH_ENABLED="true"
+$env:CLIP_API_TOKENS="replace-with-a-long-random-token"
+```
+
+When authentication is enabled, every API route requires:
+
+```text
+Authorization: Bearer <token>
+```
+
+`CLIP_API_TOKENS` accepts multiple comma-separated tokens for rotation. If
+`CLIP_AUTH_ENABLED=true` and no token is configured, service startup fails.
+
 ## Run
 
 ```powershell
@@ -85,30 +103,33 @@ Start-Service ClipClassifierService
 - `POST /v1/classify/batch` with repeated `multipart/form-data` field `files`, optional `top_k`, optional `threshold`
 - `POST /v1/classify/batch/encrypted` with JSON encrypted payloads, optional `top_k`, optional `threshold`
 
-If `CLIP_BASE_PATH=/openai-clip`, these become `/openai-clip/healthz`, `/openai-clip/readyz`, `/openai-clip/metrics`, `/openai-clip/v1/classify`, and `/openai-clip/v1/classify/batch`.
+If `CLIP_AUTH_ENABLED=true`, include `Authorization: Bearer <token>` on every request.
+
+If `CLIP_BASE_PATH=/openai-clip`, every route receives that prefix, for example `/openai-clip/healthz`, `/openai-clip/v1/encryption/public-key`, `/openai-clip/v1/classify`, and `/openai-clip/v1/classify/encrypted`.
 
 Example:
 
 ```powershell
-curl.exe -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/v1/classify?top_k=3"
+curl.exe -H "Authorization: Bearer <token>" -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/v1/classify?top_k=3"
 ```
 
 Batch example:
 
 ```powershell
-curl.exe -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
+curl.exe -H "Authorization: Bearer <token>" -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
 ```
 
 Encrypted example:
 
 ```powershell
-.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000
+.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000 --token <token>
 ```
 
 ## Production notes
 
-- Put this service behind an internal gateway or reverse proxy for TLS, authentication, and rate limiting.
+- Put this service behind an internal gateway or reverse proxy for TLS and rate limiting.
+- Enable `CLIP_AUTH_ENABLED=true` and keep `CLIP_API_TOKENS` private.
 - Keep `CLIP_MAX_IMAGE_BYTES`, `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`, and `CLIP_MAX_IMAGE_PIXELS` conservative to prevent upload, decompression, and memory abuse.
 - Keep `config/server_private.key` private and out of git.
 - Pre-download model weights during deployment, not on first live request.
-- Monitor `/metrics` for latency, request status, and error rates.
+- Monitor `/metrics` for latency, request status, and error rates using a client that sends the Bearer token.

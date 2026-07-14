@@ -88,7 +88,8 @@ Do not increase `--workers` on a single GPU unless the memory impact has been me
 - Keep invalid encrypted payloads as 4xx responses, not 500s.
 - Preserve single-GPU backpressure through the semaphore in `api.py`.
 - Keep model downloads out of first live traffic by using `scripts/preload_model.py`.
-- Expose the service behind an internal gateway or reverse proxy for TLS, auth, and rate limits.
+- Enable `CLIP_AUTH_ENABLED=true` with private `CLIP_API_TOKENS` for production API access.
+- Expose the service behind an internal gateway or reverse proxy for TLS and rate limits.
 
 ## Documentation Index
 

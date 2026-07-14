@@ -29,10 +29,29 @@ All service settings can be provided with `CLIP_` environment variables.
 - `CLIP_MAX_BATCH_SIZE`: Max images per batch request.
 - `CLIP_DEFAULT_TOP_K`: Default number of labels returned.
 - `CLIP_DEFAULT_THRESHOLD`: Default score threshold.
+- `CLIP_AUTH_ENABLED`: Enables static Bearer Token authentication for every API route.
+- `CLIP_API_TOKENS`: Comma-separated valid Bearer tokens. Required when auth is enabled.
+- `CLIP_AUTH_DISABLE_DOCS`: Disables `/docs`, `/redoc`, and `/openapi.json` when auth is enabled.
 - `CLIP_ENCRYPTION_ENABLED`: Enables encrypted upload endpoints.
 - `CLIP_REQUIRE_ENCRYPTED_UPLOADS`: Rejects plaintext classify endpoints when enabled.
 - `CLIP_ENCRYPTION_PRIVATE_KEY_PATH`: Service private key path.
 - `CLIP_ENCRYPTION_PUBLIC_KEY_PATH`: Service public key path.
+
+## API Tokens
+
+Generate a long random token outside the repository and configure it in `.env`:
+
+```powershell
+CLIP_AUTH_ENABLED=true
+CLIP_API_TOKENS=<long-random-token>
+CLIP_AUTH_DISABLE_DOCS=true
+```
+
+Use comma-separated tokens during rotation:
+
+```powershell
+CLIP_API_TOKENS=<old-token>,<new-token>
+```
 
 ## Encryption Keys
 
@@ -79,28 +98,30 @@ The script writes service logs under `logs/`.
 ## API Smoke Tests
 
 ```powershell
-curl.exe http://127.0.0.1:8000/healthz
-curl.exe http://127.0.0.1:8000/readyz
-curl.exe http://127.0.0.1:8000/metrics
-curl.exe -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/v1/classify?top_k=3"
-curl.exe -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
-.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000
+$token = "<token>"
+curl.exe -H "Authorization: Bearer $token" http://127.0.0.1:8000/healthz
+curl.exe -H "Authorization: Bearer $token" http://127.0.0.1:8000/readyz
+curl.exe -H "Authorization: Bearer $token" http://127.0.0.1:8000/metrics
+curl.exe -H "Authorization: Bearer $token" -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/v1/classify?top_k=3"
+curl.exe -H "Authorization: Bearer $token" -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
+.\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000 --token $token
 ```
 
 If `CLIP_BASE_PATH=/openai-clip`, include that prefix in every URL:
 
 ```powershell
-curl.exe http://127.0.0.1:8000/openai-clip/healthz
-curl.exe -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/openai-clip/v1/classify?top_k=3"
+curl.exe -H "Authorization: Bearer $token" http://127.0.0.1:8000/openai-clip/healthz
+curl.exe -H "Authorization: Bearer $token" -F "file=@C:\path\image.jpg" "http://127.0.0.1:8000/openai-clip/v1/classify?top_k=3"
 ```
 
 ## Production Checklist
 
 - Replace default labels with the real production label set.
 - Preload model weights during deployment.
+- Enable `CLIP_AUTH_ENABLED=true` and configure a private `CLIP_API_TOKENS` value.
 - Generate encryption keys before setting `CLIP_ENCRYPTION_ENABLED=true`.
 - Put the service behind an internal gateway or reverse proxy.
-- Enforce TLS, authentication, and rate limiting upstream.
+- Enforce TLS and rate limiting upstream.
 - Keep `--workers 1` per GPU unless measured otherwise.
-- Monitor `/metrics`, GPU memory, process memory, and request latency.
+- Monitor `/metrics`, GPU memory, process memory, and request latency with authenticated clients.
 - Keep `.env`, model cache, logs, and local virtual environments out of git.

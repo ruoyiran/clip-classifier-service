@@ -5,11 +5,12 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 from uuid import uuid4
 
-from fastapi import APIRouter, FastAPI, File, HTTPException, Query, Request, UploadFile
-from fastapi.responses import Response
+from fastapi import APIRouter, Depends, FastAPI, File, HTTPException, Query, Request, UploadFile
+from fastapi.responses import JSONResponse, Response
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from pydantic import BaseModel
 
+from clip_classifier_service.auth import create_auth_dependency, validate_bearer_token
 from clip_classifier_service.classifier import ClipClassifier
 from clip_classifier_service.encryption import (
     ENCRYPTION_ALGORITHM,
@@ -98,8 +99,19 @@ def create_app(
         app.state.classifier = state["classifier"]
         yield
 
-    app = FastAPI(title=settings.service_name, version="0.1.0", lifespan=lifespan)
-    router = APIRouter()
+    disable_docs = settings.auth_enabled and settings.auth_disable_docs
+    app = FastAPI(
+        title=settings.service_name,
+        version="0.1.0",
+        lifespan=lifespan,
+        docs_url=None if disable_docs else "/docs",
+        redoc_url=None if disable_docs else "/redoc",
+        openapi_url=None if disable_docs else "/openapi.json",
+    )
+    router_dependencies = (
+        [Depends(create_auth_dependency(settings))] if settings.auth_enabled else []
+    )
+    router = APIRouter(dependencies=router_dependencies)
     classify_route_prefix = f"{settings.base_path}/v1/classify"
 
     @app.middleware("http")
@@ -112,6 +124,15 @@ def create_app(
     @app.middleware("http")
     async def content_length_limit_middleware(request: Request, call_next):
         if request.url.path.startswith(classify_route_prefix):
+            if settings.auth_enabled:
+                try:
+                    validate_bearer_token(request.headers.get("authorization"), settings)
+                except HTTPException as exc:
+                    return JSONResponse(
+                        status_code=exc.status_code,
+                        content={"detail": exc.detail},
+                        headers=exc.headers,
+                    )
             content_length = request.headers.get("content-length")
             try:
                 parsed_content_length = int(content_length) if content_length else None

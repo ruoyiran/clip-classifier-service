@@ -12,6 +12,7 @@ Serve `hf-hub:apple/DFN5B-CLIP-ViT-H-14-378` as a fixed-label image classificati
 4. `ClipClassifier` encodes all label prompts once and keeps normalized text features in memory.
 5. FastAPI serves classification, health, readiness, encryption metadata, and Prometheus metrics endpoints.
    If `CLIP_BASE_PATH` is configured, every route is mounted under that prefix.
+6. Optional static Bearer Token authentication protects every API route when `CLIP_AUTH_ENABLED=true`.
 
 ## Startup Flow
 
@@ -34,6 +35,7 @@ If model loading fails, the process startup fails. This is intentional for produ
 POST /v1/classify, or POST <base_path>/v1/classify when CLIP_BASE_PATH is set
   -> request ID middleware
   -> content-length guard
+  -> Bearer token dependency when auth is enabled
   -> FastAPI multipart parser
   -> per-file byte limit
   -> capped upload read
@@ -51,6 +53,7 @@ POST /v1/classify, or POST <base_path>/v1/classify when CLIP_BASE_PATH is set
 POST /v1/classify/batch, or POST <base_path>/v1/classify/batch when CLIP_BASE_PATH is set
   -> request ID middleware
   -> content-length guard using max image bytes * max batch size
+  -> Bearer token dependency when auth is enabled
   -> max batch size check
   -> per-file byte limit
   -> capped upload reads
@@ -65,10 +68,12 @@ POST /v1/classify/batch, or POST <base_path>/v1/classify/batch when CLIP_BASE_PA
 
 ```text
 GET /v1/encryption/public-key
+  -> Bearer token dependency when auth is enabled
   -> returns AES-256-GCM+SealedBox-v1 and service public key
 
 POST /v1/classify/encrypted
   -> content-length guard
+  -> Bearer token dependency when auth is enabled
   -> JSON encrypted payload validation
   -> SealedBox unwraps one-time AES key with service private key
   -> AES-256-GCM decrypts image bytes
@@ -85,6 +90,8 @@ Use one process per GPU unless memory and latency have been measured. Multiple U
 
 ## Safety Boundaries
 
+- `CLIP_AUTH_ENABLED`: Requires `Authorization: Bearer <token>` on every API route.
+- `CLIP_API_TOKENS`: Comma-separated valid tokens; startup fails if auth is enabled and empty.
 - `CLIP_MAX_IMAGE_BYTES`: Per-image upload byte limit.
 - `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`: Per-image encrypted payload byte limit.
 - `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`: Request body allowance for multipart overhead.
@@ -93,11 +100,11 @@ Use one process per GPU unless memory and latency have been measured. Multiple U
 - Oversized payloads are converted to `413`.
 - Query params are validated by FastAPI.
 
-TLS, authentication, global rate limiting, and public internet exposure are intentionally out of process and should be handled by an upstream gateway.
-Application-layer encryption protects uploaded images from accidental plaintext exposure inside intermediate components, but client authentication must still be handled separately.
+TLS, global rate limiting, and public internet exposure are intentionally out of process and should be handled by an upstream gateway.
+Application-layer encryption protects uploaded images from accidental plaintext exposure inside intermediate components. Bearer Token authentication identifies authorized API clients but does not replace TLS.
 
 ## Observability
 
 - `X-Request-ID` is propagated or generated for each response.
-- `/metrics` exposes Prometheus counters and inference latency histogram.
-- Current metrics focus on classifier routes. Gateway logs should provide request-level audit and auth context.
+- `/metrics` exposes Prometheus counters and inference latency histogram and requires the Bearer token when auth is enabled.
+- Current metrics focus on classifier routes. Gateway logs should provide request-level audit context.

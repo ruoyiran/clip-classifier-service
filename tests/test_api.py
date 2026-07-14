@@ -73,6 +73,187 @@ def test_base_path_classify_endpoint(tmp_path: Path) -> None:
     assert response.json()["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
 
 
+@pytest.fixture
+def auth_headers() -> dict[str, str]:
+    return {"Authorization": "Bearer primary-token"}
+
+
+def test_auth_rejects_missing_token_on_all_routes(tmp_path: Path) -> None:
+    key_pair = generate_key_pair()
+    public_key_path = tmp_path / "server_public.key"
+    private_key_path = tmp_path / "server_private.key"
+    public_key_path.write_text(key_pair.public_key_b64, encoding="ascii")
+    private_key_path.write_text(key_pair.private_key_b64, encoding="ascii")
+    settings = Settings(
+        model_cache_dir=tmp_path,
+        auth_enabled=True,
+        api_tokens=("primary-token",),
+        encryption_enabled=True,
+        encryption_public_key_path=public_key_path,
+        encryption_private_key_path=private_key_path,
+    )
+    app = create_app(settings, classifier=FakeClassifier())
+    client = TestClient(app)
+    encrypted = encrypt_image_for_server(key_pair.public_key_b64, b"fake-image")
+
+    requests = [
+        ("get", "/healthz", {}),
+        ("get", "/readyz", {}),
+        ("get", "/metrics", {}),
+        ("get", "/v1/encryption/public-key", {}),
+        (
+            "post",
+            "/v1/classify",
+            {"files": {"file": ("image.jpg", b"fake-image", "image/jpeg")}},
+        ),
+        (
+            "post",
+            "/v1/classify/encrypted",
+            {"json": encrypted},
+        ),
+        (
+            "post",
+            "/v1/classify/batch",
+            {"files": [("files", ("one.jpg", b"fake-image", "image/jpeg"))]},
+        ),
+        (
+            "post",
+            "/v1/classify/batch/encrypted",
+            {"json": {"items": [{"filename": "one.jpg", **encrypted}]}},
+        ),
+    ]
+
+    for method, path, kwargs in requests:
+        response = getattr(client, method)(path, **kwargs)
+        assert response.status_code == 401
+        assert response.headers["www-authenticate"] == "Bearer"
+        assert response.json()["detail"] == "missing bearer token"
+
+
+def test_auth_rejects_invalid_token(tmp_path: Path) -> None:
+    app = create_app(
+        Settings(
+            model_cache_dir=tmp_path,
+            auth_enabled=True,
+            api_tokens=("primary-token",),
+        ),
+        classifier=FakeClassifier(),
+    )
+    client = TestClient(app)
+
+    response = client.get("/healthz", headers={"Authorization": "Bearer wrong-token"})
+
+    assert response.status_code == 401
+    assert response.headers["www-authenticate"] == "Bearer"
+    assert response.json()["detail"] == "invalid bearer token"
+
+
+def test_auth_rejects_missing_token_before_invalid_content_length(tmp_path: Path) -> None:
+    app = create_app(
+        Settings(
+            model_cache_dir=tmp_path,
+            auth_enabled=True,
+            api_tokens=("primary-token",),
+        ),
+        classifier=FakeClassifier(),
+    )
+    client = TestClient(app)
+
+    response = client.post(
+        "/v1/classify",
+        headers={"content-length": "not-int"},
+        files={"file": ("image.jpg", b"fake-image", "image/jpeg")},
+    )
+
+    assert response.status_code == 401
+    assert response.headers["www-authenticate"] == "Bearer"
+    assert response.json()["detail"] == "missing bearer token"
+
+
+def test_auth_rejects_missing_token_before_large_content_length(tmp_path: Path) -> None:
+    app = create_app(
+        Settings(
+            model_cache_dir=tmp_path,
+            auth_enabled=True,
+            api_tokens=("primary-token",),
+            max_image_bytes=4,
+            max_multipart_overhead_bytes=0,
+        ),
+        classifier=FakeClassifier(),
+    )
+    client = TestClient(app)
+
+    response = client.post(
+        "/v1/classify",
+        headers={"content-length": "5"},
+        files={"file": ("image.jpg", b"tiny", "image/jpeg")},
+    )
+
+    assert response.status_code == 401
+    assert response.headers["www-authenticate"] == "Bearer"
+    assert response.json()["detail"] == "missing bearer token"
+
+
+def test_auth_accepts_any_configured_token(tmp_path: Path) -> None:
+    app = create_app(
+        Settings(
+            model_cache_dir=tmp_path,
+            auth_enabled=True,
+            api_tokens=("primary-token", "secondary-token"),
+        ),
+        classifier=FakeClassifier(),
+    )
+    client = TestClient(app)
+
+    first = client.get("/healthz", headers={"Authorization": "Bearer primary-token"})
+    second = client.get("/readyz", headers={"Authorization": "Bearer secondary-token"})
+
+    assert first.status_code == 200
+    assert first.json() == {"status": "ok"}
+    assert second.status_code == 200
+    assert second.json() == {"status": "ready"}
+
+
+def test_auth_applies_under_base_path(tmp_path: Path) -> None:
+    app = create_app(
+        Settings(
+            model_cache_dir=tmp_path,
+            base_path="/openai-clip",
+            auth_enabled=True,
+            api_tokens=("primary-token",),
+        ),
+        classifier=FakeClassifier(),
+    )
+    client = TestClient(app)
+
+    unauthorized = client.get("/openai-clip/healthz")
+    authorized = client.get(
+        "/openai-clip/healthz",
+        headers={"Authorization": "Bearer primary-token"},
+    )
+
+    assert unauthorized.status_code == 401
+    assert authorized.status_code == 200
+    assert authorized.json() == {"status": "ok"}
+
+
+def test_auth_disables_docs_when_configured(tmp_path: Path, auth_headers: dict[str, str]) -> None:
+    app = create_app(
+        Settings(
+            model_cache_dir=tmp_path,
+            auth_enabled=True,
+            api_tokens=("primary-token",),
+            auth_disable_docs=True,
+        ),
+        classifier=FakeClassifier(),
+    )
+    client = TestClient(app)
+
+    assert client.get("/docs", headers=auth_headers).status_code == 404
+    assert client.get("/redoc", headers=auth_headers).status_code == 404
+    assert client.get("/openapi.json", headers=auth_headers).status_code == 404
+
+
 def test_classify_endpoint_returns_top_labels(tmp_path: Path) -> None:
     app = create_app(Settings(model_cache_dir=tmp_path), classifier=FakeClassifier())
     client = TestClient(app)

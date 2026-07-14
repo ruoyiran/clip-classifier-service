@@ -1,8 +1,8 @@
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import field_validator, model_validator
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     default_top_k: int = 5
     default_threshold: float = 0.0
     service_name: str = "clip-classifier-service"
+    auth_enabled: bool = False
+    api_tokens: Annotated[tuple[str, ...], NoDecode] = ()
+    auth_disable_docs: bool = True
     encryption_enabled: bool = False
     require_encrypted_uploads: bool = False
     encryption_private_key_path: Path = Path("config/server_private.key")
@@ -61,6 +64,15 @@ class Settings(BaseSettings):
             raise ValueError("default_threshold must be between 0.0 and 1.0")
         return value
 
+    @field_validator("api_tokens", mode="before")
+    @classmethod
+    def parse_api_tokens(cls, value):
+        if value is None:
+            return ()
+        if isinstance(value, str):
+            return tuple(token.strip() for token in value.split(",") if token.strip())
+        return tuple(token.strip() for token in value if str(token).strip())
+
     @field_validator("base_path")
     @classmethod
     def normalize_base_path(cls, value: str) -> str:
@@ -74,3 +86,9 @@ class Settings(BaseSettings):
         if not value.startswith("/"):
             value = f"/{value}"
         return value.rstrip("/")
+
+    @model_validator(mode="after")
+    def validate_auth_configuration(self):
+        if self.auth_enabled and not self.api_tokens:
+            raise ValueError("api_tokens must contain at least one token when auth_enabled is true")
+        return self

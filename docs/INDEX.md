@@ -25,5 +25,10 @@ This directory contains the project handoff documentation for the CLIP classifie
 - `GET /healthz`
 - `GET /readyz`
 - `GET /metrics`
+- `GET /v1/encryption/public-key`
 - `POST /v1/classify`
+- `POST /v1/classify/encrypted`
 - `POST /v1/classify/batch`
+- `POST /v1/classify/batch/encrypted`
+
+When `CLIP_AUTH_ENABLED=true`, every route requires `Authorization: Bearer <token>`.
