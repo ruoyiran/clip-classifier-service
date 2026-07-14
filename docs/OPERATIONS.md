@@ -28,7 +28,7 @@ All service settings can be provided with `CLIP_` environment variables.
 - `CLIP_MAX_IMAGE_PIXELS`: Decoded image pixel limit.
 - `CLIP_MAX_BATCH_SIZE`: Max images per batch request.
 - `CLIP_DEFAULT_TOP_K`: Default number of labels returned.
-- `CLIP_DEFAULT_THRESHOLD`: Default score threshold.
+- `CLIP_DEFAULT_THRESHOLD`: Default softmax `score` threshold. It does not filter raw `similarity`.
 - `CLIP_AUTH_ENABLED`: Enables static Bearer Token authentication for every API route.
 - `CLIP_API_TOKENS`: Comma-separated valid Bearer tokens. Required when auth is enabled.
 - `CLIP_AUTH_DISABLE_DOCS`: Disables `/docs`, `/redoc`, and `/openapi.json` when auth is enabled.
@@ -106,6 +106,10 @@ curl.exe -H "Authorization: Bearer $token" -F "file=@C:\path\image.jpg" "http://
 curl.exe -H "Authorization: Bearer $token" -F "files=@C:\path\one.jpg" -F "files=@C:\path\two.jpg" "http://127.0.0.1:8000/v1/classify/batch?top_k=3"
 .\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000 --token $token
 ```
+
+The `threshold` query parameter filters by returned softmax `score`. If a client
+needs raw cosine similarity thresholds, request `threshold=0.0` with enough
+`top_k` labels and apply thresholds to each label's `similarity` field.
 
 If `CLIP_BASE_PATH=/openai-clip`, include that prefix in every URL:
 

@@ -188,14 +188,32 @@ response.raise_for_status()
 print(response.json())
 ```
 
-Expected successful response shape:
+Expected successful single-image response shape:
 
 ```json
 {
   "model": "hf-hub:apple/DFN5B-CLIP-ViT-H-14-378",
   "elapsed_ms": 123.45,
   "labels": [
-    {"id": "sea_otter", "name": "Sea Otter", "score": 0.8703}
+    {"id": "cat", "name": "猫", "score": 0.8703, "similarity": 0.3124}
+  ]
+}
+```
+
+Batch endpoints wrap the same per-image shape in `results` and include each
+item's `filename` when supplied:
+
+```json
+{
+  "results": [
+    {
+      "filename": "one.jpg",
+      "model": "hf-hub:apple/DFN5B-CLIP-ViT-H-14-378",
+      "elapsed_ms": 123.45,
+      "labels": [
+        {"id": "cat", "name": "猫", "score": 0.8703, "similarity": 0.3124}
+      ]
+    }
   ]
 }
 ```

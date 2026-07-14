@@ -20,6 +20,8 @@ Copy-Item .env.example .env
 ```
 
 Edit `config/labels.yaml` for the production label set before exposing the service.
+Each enabled label can define either `prompt` or `prompts`; when `prompts` is used,
+the classifier takes the best cosine similarity across that label's prompts.
 
 ## Verify CUDA
 
@@ -107,6 +109,12 @@ Start-Service ClipClassifierService
 - `POST /v1/classify/batch` with repeated `multipart/form-data` field `files`, optional `top_k`, optional `threshold`
 - `POST /v1/classify/batch/encrypted` with JSON encrypted payloads, optional `top_k`, optional `threshold`
 
+Each returned label includes `score` (softmax over configured labels) and
+`similarity` (raw image-text cosine similarity for the best prompt in that label).
+The request `threshold` filters by `score`, not `similarity`. Clients that need
+raw cosine thresholds should request `threshold=0.0` with enough `top_k` labels
+and apply their own thresholding to `similarity`.
+
 If `CLIP_AUTH_ENABLED=true`, include `Authorization: Bearer <token>` on every request.
 
 If `CLIP_BASE_PATH=/openai-clip`, every route receives that prefix, for example `/openai-clip/healthz`, `/openai-clip/v1/encryption/public-key`, `/openai-clip/v1/classify`, and `/openai-clip/v1/classify/encrypted`.
@@ -127,6 +135,12 @@ Encrypted example:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\encrypt_sample_image.py C:\path\image.jpg --base-url http://127.0.0.1:8000 --token <token>
+```
+
+External encrypted batch smoke test:
+
+```powershell
+python test_external_api.py C:\path\one.jpg C:\path\two.jpg --base-url https://example.internal/openai-clip --batch-size 8 --top-k 3
 ```
 
 ## Production notes

@@ -6,8 +6,8 @@
 - `api.py`: HTTP app factory, lifespan model loading, upload limits, request ID middleware, GPU concurrency guard, classification routes, metrics endpoint.
 - `auth.py`: Static Bearer Token dependency and constant-time token comparison.
 - `settings.py`: `pydantic-settings` configuration loaded from defaults, `.env`, and `CLIP_` environment variables.
-- `labels.py`: YAML label loader and validation for fixed-label classifier configuration.
-- `classifier.py`: Model-agnostic classification logic, text feature cache, single-image and batch ranking.
+- `labels.py`: YAML label loader and validation for fixed-label classifier configuration, including multi-prompt labels.
+- `classifier.py`: Model-agnostic classification logic, text feature cache, multi-prompt best-similarity scoring, single-image and batch ranking.
 - `openclip_backend.py`: OpenCLIP/PyTorch backend, model loading, image decoding, pixel safety limits, single and batch image encoding.
 - `encryption.py`: AES-256-GCM image encryption helpers, libsodium SealedBox key wrapping, and key generation.
 - `metrics.py`: Prometheus counters and inference latency histogram.
@@ -25,7 +25,7 @@
 
 ## Configuration
 
-- `config/labels.yaml`: Default labels. Replace with production labels before exposing the service.
+- `config/labels.yaml`: Production labels aligned with the photo-classifier category set.
 - `.env.example`: Documented runtime configuration defaults.
 - `requirements.txt`: Runtime dependencies.
 - `requirements-dev.txt`: Runtime dependencies plus test/lint tools.

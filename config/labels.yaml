@@ -1,1184 +1,737 @@
+# Production labels aligned with photo-classifier pipeline/categories.yaml.
+# English OpenCLIP prompts only; each label may have multiple prompts.
+# The service scores a label by the maximum cosine similarity across its prompts.
 labels:
-  # People and body
-  - id: person
-    name: Person
-    prompt: a photo of a person
-    enabled: true
-  - id: face
-    name: Face
-    prompt: a close-up photo of a human face
-    enabled: true
-  - id: hand
-    name: Hand
-    prompt: a photo of a human hand
-    enabled: true
-  - id: baby
-    name: Baby
-    prompt: a photo of a baby
-    enabled: true
-  - id: child
-    name: Child
-    prompt: a photo of a child
-    enabled: true
-  - id: crowd
-    name: Crowd
-    prompt: a photo of a crowd of people
-    enabled: true
-
-  # Animals
-  - id: cat
-    name: Cat
-    prompt: a photo of a cat
-    enabled: true
-  - id: dog
-    name: Dog
-    prompt: a photo of a dog
-    enabled: true
-  - id: puppy
-    name: Puppy
-    prompt: a photo of a puppy
-    enabled: true
-  - id: kitten
-    name: Kitten
-    prompt: a photo of a kitten
-    enabled: true
-  - id: horse
-    name: Horse
-    prompt: a photo of a horse
-    enabled: true
-  - id: cow
-    name: Cow
-    prompt: a photo of a cow
-    enabled: true
-  - id: sheep
-    name: Sheep
-    prompt: a photo of a sheep
-    enabled: true
-  - id: goat
-    name: Goat
-    prompt: a photo of a goat
-    enabled: true
-  - id: pig
-    name: Pig
-    prompt: a photo of a pig
-    enabled: true
-  - id: rabbit
-    name: Rabbit
-    prompt: a photo of a rabbit
-    enabled: true
-  - id: hamster
-    name: Hamster
-    prompt: a photo of a hamster
-    enabled: true
-  - id: mouse
-    name: Mouse
-    prompt: a photo of a mouse
-    enabled: true
-  - id: squirrel
-    name: Squirrel
-    prompt: a photo of a squirrel
-    enabled: true
-  - id: deer
-    name: Deer
-    prompt: a photo of a deer
-    enabled: true
-  - id: bear
-    name: Bear
-    prompt: a photo of a bear
-    enabled: true
-  - id: panda
-    name: Panda
-    prompt: a photo of a panda
-    enabled: true
-  - id: koala
-    name: Koala
-    prompt: a photo of a koala
-    enabled: true
-  - id: monkey
-    name: Monkey
-    prompt: a photo of a monkey
-    enabled: true
-  - id: gorilla
-    name: Gorilla
-    prompt: a photo of a gorilla
-    enabled: true
-  - id: elephant
-    name: Elephant
-    prompt: a photo of an elephant
-    enabled: true
-  - id: giraffe
-    name: Giraffe
-    prompt: a photo of a giraffe
-    enabled: true
-  - id: zebra
-    name: Zebra
-    prompt: a photo of a zebra
-    enabled: true
-  - id: lion
-    name: Lion
-    prompt: a photo of a lion
-    enabled: true
-  - id: tiger
-    name: Tiger
-    prompt: a photo of a tiger
-    enabled: true
-  - id: leopard
-    name: Leopard
-    prompt: a photo of a leopard
-    enabled: true
-  - id: wolf
-    name: Wolf
-    prompt: a photo of a wolf
-    enabled: true
-  - id: fox
-    name: Fox
-    prompt: a photo of a fox
-    enabled: true
-  - id: raccoon
-    name: Raccoon
-    prompt: a photo of a raccoon
-    enabled: true
-  - id: skunk
-    name: Skunk
-    prompt: a photo of a skunk
-    enabled: true
-  - id: kangaroo
-    name: Kangaroo
-    prompt: a photo of a kangaroo
-    enabled: true
-  - id: camel
-    name: Camel
-    prompt: a photo of a camel
-    enabled: true
-  - id: llama
-    name: Llama
-    prompt: a photo of a llama
-    enabled: true
-  - id: bat
-    name: Bat
-    prompt: a photo of a bat
-    enabled: true
-  - id: hedgehog
-    name: Hedgehog
-    prompt: a photo of a hedgehog
-    enabled: true
-  - id: otter
-    name: Otter
-    prompt: a photo of an otter
-    enabled: true
-  - id: sea_otter
-    name: Sea Otter
-    prompt: a photo of a sea otter floating in water
-    enabled: true
-  - id: seal
-    name: Seal
-    prompt: a photo of a seal
-    enabled: true
-  - id: dolphin
-    name: Dolphin
-    prompt: a photo of a dolphin
-    enabled: true
-  - id: whale
-    name: Whale
-    prompt: a photo of a whale
-    enabled: true
-  - id: shark
-    name: Shark
-    prompt: a photo of a shark
-    enabled: true
-  - id: fish
-    name: Fish
-    prompt: a photo of a fish
-    enabled: true
-  - id: goldfish
-    name: Goldfish
-    prompt: a photo of a goldfish
-    enabled: true
-  - id: turtle
-    name: Turtle
-    prompt: a photo of a turtle
-    enabled: true
-  - id: crocodile
-    name: Crocodile
-    prompt: a photo of a crocodile
-    enabled: true
-  - id: snake
-    name: Snake
-    prompt: a photo of a snake
-    enabled: true
-  - id: lizard
-    name: Lizard
-    prompt: a photo of a lizard
-    enabled: true
-  - id: frog
-    name: Frog
-    prompt: a photo of a frog
-    enabled: true
-  - id: bird
-    name: Bird
-    prompt: a photo of a bird
-    enabled: true
-  - id: eagle
-    name: Eagle
-    prompt: a photo of an eagle
-    enabled: true
-  - id: owl
-    name: Owl
-    prompt: a photo of an owl
-    enabled: true
-  - id: duck
-    name: Duck
-    prompt: a photo of a duck
-    enabled: true
-  - id: goose
-    name: Goose
-    prompt: a photo of a goose
-    enabled: true
-  - id: chicken
-    name: Chicken
-    prompt: a photo of a chicken
-    enabled: true
-  - id: rooster
-    name: Rooster
-    prompt: a photo of a rooster
-    enabled: true
-  - id: turkey
-    name: Turkey
-    prompt: a photo of a turkey
-    enabled: true
-  - id: penguin
-    name: Penguin
-    prompt: a photo of a penguin
-    enabled: true
-  - id: flamingo
-    name: Flamingo
-    prompt: a photo of a flamingo
-    enabled: true
-  - id: parrot
-    name: Parrot
-    prompt: a photo of a parrot
-    enabled: true
-  - id: swan
-    name: Swan
-    prompt: a photo of a swan
-    enabled: true
-  - id: peacock
-    name: Peacock
-    prompt: a photo of a peacock
-    enabled: true
-  - id: butterfly
-    name: Butterfly
-    prompt: a photo of a butterfly
-    enabled: true
-  - id: bee
-    name: Bee
-    prompt: a photo of a bee
-    enabled: true
-  - id: ant
-    name: Ant
-    prompt: a photo of an ant
-    enabled: true
-  - id: spider
-    name: Spider
-    prompt: a photo of a spider
-    enabled: true
-  - id: snail
-    name: Snail
-    prompt: a photo of a snail
-    enabled: true
-  - id: crab
-    name: Crab
-    prompt: a photo of a crab
-    enabled: true
-  - id: lobster
-    name: Lobster
-    prompt: a photo of a lobster
-    enabled: true
-  - id: shrimp
-    name: Shrimp
-    prompt: a photo of shrimp
-    enabled: true
-  - id: octopus
-    name: Octopus
-    prompt: a photo of an octopus
-    enabled: true
-  - id: jellyfish
-    name: Jellyfish
-    prompt: a photo of a jellyfish
-    enabled: true
-
-  # Vehicles and transport
-  - id: car
-    name: Car
-    prompt: a photo of a car
-    enabled: true
-  - id: truck
-    name: Truck
-    prompt: a photo of a truck
-    enabled: true
-  - id: bus
-    name: Bus
-    prompt: a photo of a bus
-    enabled: true
-  - id: van
-    name: Van
-    prompt: a photo of a van
-    enabled: true
-  - id: taxi
-    name: Taxi
-    prompt: a photo of a taxi
-    enabled: true
-  - id: ambulance
-    name: Ambulance
-    prompt: a photo of an ambulance
-    enabled: true
-  - id: fire_truck
-    name: Fire Truck
-    prompt: a photo of a fire truck
-    enabled: true
-  - id: police_car
-    name: Police Car
-    prompt: a photo of a police car
-    enabled: true
-  - id: motorcycle
-    name: Motorcycle
-    prompt: a photo of a motorcycle
-    enabled: true
-  - id: bicycle
-    name: Bicycle
-    prompt: a photo of a bicycle
-    enabled: true
-  - id: scooter
-    name: Scooter
-    prompt: a photo of a scooter
-    enabled: true
-  - id: train
-    name: Train
-    prompt: a photo of a train
-    enabled: true
-  - id: subway_train
-    name: Subway Train
-    prompt: a photo of a subway train
-    enabled: true
-  - id: airplane
-    name: Airplane
-    prompt: a photo of an airplane
-    enabled: true
-  - id: helicopter
-    name: Helicopter
-    prompt: a photo of a helicopter
-    enabled: true
-  - id: boat
-    name: Boat
-    prompt: a photo of a boat
-    enabled: true
-  - id: ship
-    name: Ship
-    prompt: a photo of a ship
-    enabled: true
-  - id: sailboat
-    name: Sailboat
-    prompt: a photo of a sailboat
-    enabled: true
-  - id: skateboard
-    name: Skateboard
-    prompt: a photo of a skateboard
-    enabled: true
-  - id: wheelchair
-    name: Wheelchair
-    prompt: a photo of a wheelchair
-    enabled: true
-  - id: stroller
-    name: Stroller
-    prompt: a photo of a baby stroller
-    enabled: true
-  - id: tractor
-    name: Tractor
-    prompt: a photo of a tractor
-    enabled: true
-  - id: excavator
-    name: Excavator
-    prompt: a photo of an excavator
-    enabled: true
-
-  # Clothing and accessories
-  - id: shirt
-    name: Shirt
-    prompt: a photo of a shirt
-    enabled: true
-  - id: t_shirt
-    name: T-Shirt
-    prompt: a photo of a t-shirt
-    enabled: true
-  - id: jacket
-    name: Jacket
-    prompt: a photo of a jacket
-    enabled: true
-  - id: coat
-    name: Coat
-    prompt: a photo of a coat
-    enabled: true
-  - id: dress
-    name: Dress
-    prompt: a photo of a dress
-    enabled: true
-  - id: skirt
-    name: Skirt
-    prompt: a photo of a skirt
-    enabled: true
-  - id: pants
-    name: Pants
-    prompt: a photo of pants
-    enabled: true
-  - id: jeans
-    name: Jeans
-    prompt: a photo of jeans
-    enabled: true
-  - id: shorts
-    name: Shorts
-    prompt: a photo of shorts
-    enabled: true
-  - id: shoe
-    name: Shoe
-    prompt: a photo of a shoe
-    enabled: true
-  - id: sneaker
-    name: Sneaker
-    prompt: a photo of a sneaker
-    enabled: true
-  - id: boot
-    name: Boot
-    prompt: a photo of a boot
-    enabled: true
-  - id: hat
-    name: Hat
-    prompt: a photo of a hat
-    enabled: true
-  - id: helmet
-    name: Helmet
-    prompt: a photo of a helmet
-    enabled: true
-  - id: glasses
-    name: Glasses
-    prompt: a photo of glasses
-    enabled: true
-  - id: sunglasses
-    name: Sunglasses
-    prompt: a photo of sunglasses
-    enabled: true
-  - id: watch
-    name: Watch
-    prompt: a photo of a wristwatch
-    enabled: true
-  - id: ring
-    name: Ring
-    prompt: a photo of a ring
-    enabled: true
-  - id: necklace
-    name: Necklace
-    prompt: a photo of a necklace
-    enabled: true
-  - id: handbag
-    name: Handbag
-    prompt: a photo of a handbag
-    enabled: true
-  - id: backpack
-    name: Backpack
-    prompt: a photo of a backpack
-    enabled: true
-  - id: suitcase
-    name: Suitcase
-    prompt: a photo of a suitcase
-    enabled: true
-  - id: umbrella
-    name: Umbrella
-    prompt: a photo of an umbrella
-    enabled: true
-
-  # Home, furniture, and appliances
-  - id: chair
-    name: Chair
-    prompt: a photo of a chair
-    enabled: true
-  - id: sofa
-    name: Sofa
-    prompt: a photo of a sofa
-    enabled: true
-  - id: table
-    name: Table
-    prompt: a photo of a table
-    enabled: true
-  - id: desk
-    name: Desk
-    prompt: a photo of a desk
-    enabled: true
-  - id: bed
-    name: Bed
-    prompt: a photo of a bed
-    enabled: true
-  - id: pillow
-    name: Pillow
-    prompt: a photo of a pillow
-    enabled: true
-  - id: blanket
-    name: Blanket
-    prompt: a photo of a blanket
-    enabled: true
-  - id: lamp
-    name: Lamp
-    prompt: a photo of a lamp
-    enabled: true
-  - id: mirror
-    name: Mirror
-    prompt: a photo of a mirror
-    enabled: true
-  - id: clock
-    name: Clock
-    prompt: a photo of a clock
-    enabled: true
-  - id: vase
-    name: Vase
-    prompt: a photo of a vase
-    enabled: true
-  - id: rug
-    name: Rug
-    prompt: a photo of a rug
-    enabled: true
-  - id: curtain
-    name: Curtain
-    prompt: a photo of curtains
-    enabled: true
-  - id: door
-    name: Door
-    prompt: a photo of a door
-    enabled: true
-  - id: window
-    name: Window
-    prompt: a photo of a window
-    enabled: true
-  - id: television
-    name: Television
-    prompt: a photo of a television
-    enabled: true
-  - id: remote_control
-    name: Remote Control
-    prompt: a photo of a remote control
-    enabled: true
-  - id: refrigerator
-    name: Refrigerator
-    prompt: a photo of a refrigerator
-    enabled: true
-  - id: oven
-    name: Oven
-    prompt: a photo of an oven
-    enabled: true
-  - id: microwave
-    name: Microwave
-    prompt: a photo of a microwave oven
-    enabled: true
-  - id: toaster
-    name: Toaster
-    prompt: a photo of a toaster
-    enabled: true
-  - id: sink
-    name: Sink
-    prompt: a photo of a sink
-    enabled: true
-  - id: toilet
-    name: Toilet
-    prompt: a photo of a toilet
-    enabled: true
-  - id: bathtub
-    name: Bathtub
-    prompt: a photo of a bathtub
-    enabled: true
-  - id: shower
-    name: Shower
-    prompt: a photo of a shower
-    enabled: true
-  - id: washing_machine
-    name: Washing Machine
-    prompt: a photo of a washing machine
-    enabled: true
-  - id: fan
-    name: Fan
-    prompt: a photo of a fan
-    enabled: true
-  - id: air_conditioner
-    name: Air Conditioner
-    prompt: a photo of an air conditioner
-    enabled: true
-  - id: trash_can
-    name: Trash Can
-    prompt: a photo of a trash can
-    enabled: true
-  - id: basket
-    name: Basket
-    prompt: a photo of a basket
-    enabled: true
-
-  # Electronics and office
-  - id: smartphone
-    name: Smartphone
-    prompt: a photo of a smartphone
-    enabled: true
-  - id: telephone
-    name: Telephone
-    prompt: a photo of a telephone
-    enabled: true
-  - id: laptop
-    name: Laptop
-    prompt: a photo of a laptop computer
-    enabled: true
-  - id: desktop_computer
-    name: Desktop Computer
-    prompt: a photo of a desktop computer
-    enabled: true
-  - id: computer_monitor
-    name: Computer Monitor
-    prompt: a photo of a computer monitor
-    enabled: true
-  - id: keyboard
-    name: Keyboard
-    prompt: a photo of a computer keyboard
-    enabled: true
-  - id: computer_mouse
-    name: Computer Mouse
-    prompt: a photo of a computer mouse
-    enabled: true
-  - id: tablet
-    name: Tablet
-    prompt: a photo of a tablet computer
-    enabled: true
-  - id: camera
-    name: Camera
-    prompt: a photo of a camera
-    enabled: true
-  - id: headphones
-    name: Headphones
-    prompt: a photo of headphones
-    enabled: true
-  - id: speaker
-    name: Speaker
-    prompt: a photo of a speaker
-    enabled: true
-  - id: microphone
-    name: Microphone
-    prompt: a photo of a microphone
-    enabled: true
-  - id: printer
-    name: Printer
-    prompt: a photo of a printer
-    enabled: true
-  - id: router
-    name: Router
-    prompt: a photo of a wireless router
-    enabled: true
-  - id: game_controller
-    name: Game Controller
-    prompt: a photo of a game controller
-    enabled: true
-  - id: book
-    name: Book
-    prompt: a photo of a book
-    enabled: true
-  - id: notebook
-    name: Notebook
-    prompt: a photo of a notebook
-    enabled: true
-  - id: pen
-    name: Pen
-    prompt: a photo of a pen
-    enabled: true
-  - id: pencil
-    name: Pencil
-    prompt: a photo of a pencil
-    enabled: true
-  - id: scissors
-    name: Scissors
-    prompt: a photo of scissors
-    enabled: true
-
-  # Food and drink
-  - id: apple
-    name: Apple
-    prompt: a photo of an apple
-    enabled: true
-  - id: banana
-    name: Banana
-    prompt: a photo of a banana
-    enabled: true
-  - id: orange
-    name: Orange
-    prompt: a photo of an orange fruit
-    enabled: true
-  - id: lemon
-    name: Lemon
-    prompt: a photo of a lemon
-    enabled: true
-  - id: strawberry
-    name: Strawberry
-    prompt: a photo of a strawberry
-    enabled: true
-  - id: grape
-    name: Grape
-    prompt: a photo of grapes
-    enabled: true
-  - id: watermelon
-    name: Watermelon
-    prompt: a photo of a watermelon
-    enabled: true
-  - id: pineapple
-    name: Pineapple
-    prompt: a photo of a pineapple
-    enabled: true
-  - id: mango
-    name: Mango
-    prompt: a photo of a mango
-    enabled: true
-  - id: avocado
-    name: Avocado
-    prompt: a photo of an avocado
-    enabled: true
-  - id: tomato
-    name: Tomato
-    prompt: a photo of a tomato
-    enabled: true
-  - id: carrot
-    name: Carrot
-    prompt: a photo of a carrot
-    enabled: true
-  - id: broccoli
-    name: Broccoli
-    prompt: a photo of broccoli
-    enabled: true
-  - id: corn
-    name: Corn
-    prompt: a photo of corn
-    enabled: true
-  - id: potato
-    name: Potato
-    prompt: a photo of a potato
-    enabled: true
-  - id: mushroom
-    name: Mushroom
-    prompt: a photo of a mushroom
-    enabled: true
-  - id: salad
-    name: Salad
-    prompt: a photo of a salad
-    enabled: true
-  - id: bread
-    name: Bread
-    prompt: a photo of bread
-    enabled: true
-  - id: sandwich
-    name: Sandwich
-    prompt: a photo of a sandwich
-    enabled: true
-  - id: hamburger
-    name: Hamburger
-    prompt: a photo of a hamburger
-    enabled: true
-  - id: hot_dog
-    name: Hot Dog
-    prompt: a photo of a hot dog
-    enabled: true
-  - id: pizza
-    name: Pizza
-    prompt: a photo of pizza
-    enabled: true
-  - id: pasta
-    name: Pasta
-    prompt: a photo of pasta
-    enabled: true
-  - id: rice
-    name: Rice
-    prompt: a photo of rice
-    enabled: true
-  - id: noodles
-    name: Noodles
-    prompt: a photo of noodles
-    enabled: true
-  - id: soup
-    name: Soup
-    prompt: a photo of soup
-    enabled: true
-  - id: steak
-    name: Steak
-    prompt: a photo of steak
-    enabled: true
-  - id: chicken_food
-    name: Chicken Food
-    prompt: a photo of cooked chicken food
-    enabled: true
-  - id: fish_food
-    name: Fish Food
-    prompt: a photo of cooked fish food
-    enabled: true
-  - id: sushi
-    name: Sushi
-    prompt: a photo of sushi
-    enabled: true
-  - id: taco
-    name: Taco
-    prompt: a photo of a taco
-    enabled: true
-  - id: egg
-    name: Egg
-    prompt: a photo of an egg
-    enabled: true
-  - id: cheese
-    name: Cheese
-    prompt: a photo of cheese
-    enabled: true
-  - id: cake
-    name: Cake
-    prompt: a photo of a cake
-    enabled: true
-  - id: cookie
-    name: Cookie
-    prompt: a photo of a cookie
-    enabled: true
-  - id: ice_cream
-    name: Ice Cream
-    prompt: a photo of ice cream
-    enabled: true
-  - id: chocolate
-    name: Chocolate
-    prompt: a photo of chocolate
-    enabled: true
-  - id: coffee
-    name: Coffee
-    prompt: a photo of coffee
-    enabled: true
-  - id: tea
-    name: Tea
-    prompt: a photo of tea
-    enabled: true
-  - id: juice
-    name: Juice
-    prompt: a photo of juice
-    enabled: true
-  - id: beer
-    name: Beer
-    prompt: a photo of beer
-    enabled: true
-  - id: wine
-    name: Wine
-    prompt: a photo of wine
-    enabled: true
-  - id: water_bottle
-    name: Water Bottle
-    prompt: a photo of a water bottle
-    enabled: true
-
-  # Kitchen and household objects
-  - id: plate
-    name: Plate
-    prompt: a photo of a plate
-    enabled: true
-  - id: bowl
-    name: Bowl
-    prompt: a photo of a bowl
-    enabled: true
-  - id: cup
-    name: Cup
-    prompt: a photo of a cup
-    enabled: true
-  - id: mug
-    name: Mug
-    prompt: a photo of a mug
-    enabled: true
-  - id: fork
-    name: Fork
-    prompt: a photo of a fork
-    enabled: true
-  - id: spoon
-    name: Spoon
-    prompt: a photo of a spoon
-    enabled: true
-  - id: knife
-    name: Knife
-    prompt: a photo of a knife
-    enabled: true
-  - id: bottle
-    name: Bottle
-    prompt: a photo of a bottle
-    enabled: true
-  - id: can
-    name: Can
-    prompt: a photo of a can
-    enabled: true
-  - id: pan
-    name: Pan
-    prompt: a photo of a cooking pan
-    enabled: true
-  - id: pot
-    name: Pot
-    prompt: a photo of a cooking pot
-    enabled: true
-  - id: kettle
-    name: Kettle
-    prompt: a photo of a kettle
-    enabled: true
-  - id: cutting_board
-    name: Cutting Board
-    prompt: a photo of a cutting board
-    enabled: true
-
-  # Tools and hardware
-  - id: hammer
-    name: Hammer
-    prompt: a photo of a hammer
-    enabled: true
-  - id: screwdriver
-    name: Screwdriver
-    prompt: a photo of a screwdriver
-    enabled: true
-  - id: wrench
-    name: Wrench
-    prompt: a photo of a wrench
-    enabled: true
-  - id: pliers
-    name: Pliers
-    prompt: a photo of pliers
-    enabled: true
-  - id: saw
-    name: Saw
-    prompt: a photo of a saw
-    enabled: true
-  - id: drill
-    name: Drill
-    prompt: a photo of a power drill
-    enabled: true
-  - id: ladder
-    name: Ladder
-    prompt: a photo of a ladder
-    enabled: true
-  - id: flashlight
-    name: Flashlight
-    prompt: a photo of a flashlight
-    enabled: true
-  - id: lock
-    name: Lock
-    prompt: a photo of a lock
-    enabled: true
-  - id: key
-    name: Key
-    prompt: a photo of a key
-    enabled: true
-
-  # Sports, toys, and instruments
-  - id: ball
-    name: Ball
-    prompt: a photo of a ball
-    enabled: true
-  - id: soccer_ball
-    name: Soccer Ball
-    prompt: a photo of a soccer ball
-    enabled: true
-  - id: basketball
-    name: Basketball
-    prompt: a photo of a basketball
-    enabled: true
-  - id: baseball
-    name: Baseball
-    prompt: a photo of a baseball
-    enabled: true
-  - id: tennis_ball
-    name: Tennis Ball
-    prompt: a photo of a tennis ball
-    enabled: true
-  - id: golf_ball
-    name: Golf Ball
-    prompt: a photo of a golf ball
-    enabled: true
-  - id: racket
-    name: Racket
-    prompt: a photo of a sports racket
-    enabled: true
-  - id: surfboard
-    name: Surfboard
-    prompt: a photo of a surfboard
-    enabled: true
-  - id: skis
-    name: Skis
-    prompt: a photo of skis
-    enabled: true
-  - id: snowboard
-    name: Snowboard
-    prompt: a photo of a snowboard
-    enabled: true
-  - id: dumbbell
-    name: Dumbbell
-    prompt: a photo of a dumbbell
-    enabled: true
-  - id: toy
-    name: Toy
-    prompt: a photo of a toy
-    enabled: true
-  - id: teddy_bear
-    name: Teddy Bear
-    prompt: a photo of a teddy bear
-    enabled: true
-  - id: doll
-    name: Doll
-    prompt: a photo of a doll
-    enabled: true
-  - id: guitar
-    name: Guitar
-    prompt: a photo of a guitar
-    enabled: true
-  - id: piano
-    name: Piano
-    prompt: a photo of a piano
-    enabled: true
-  - id: violin
-    name: Violin
-    prompt: a photo of a violin
-    enabled: true
-  - id: drum
-    name: Drum
-    prompt: a photo of a drum
-    enabled: true
-
-  # Plants, nature, and outdoor objects
-  - id: tree
-    name: Tree
-    prompt: a photo of a tree
-    enabled: true
-  - id: flower
-    name: Flower
-    prompt: a photo of a flower
-    enabled: true
-  - id: plant
-    name: Plant
-    prompt: a photo of a plant
-    enabled: true
-  - id: grass
-    name: Grass
-    prompt: a photo of grass
-    enabled: true
-  - id: leaf
-    name: Leaf
-    prompt: a photo of a leaf
-    enabled: true
-  - id: cactus
-    name: Cactus
-    prompt: a photo of a cactus
-    enabled: true
-  - id: forest
-    name: Forest
-    prompt: a photo of a forest
-    enabled: true
-  - id: mountain
-    name: Mountain
-    prompt: a photo of a mountain
-    enabled: true
-  - id: beach
-    name: Beach
-    prompt: a photo of a beach
-    enabled: true
-  - id: ocean
-    name: Ocean
-    prompt: a photo of the ocean
-    enabled: true
-  - id: river
-    name: River
-    prompt: a photo of a river
-    enabled: true
-  - id: lake
-    name: Lake
-    prompt: a photo of a lake
-    enabled: true
-  - id: waterfall
-    name: Waterfall
-    prompt: a photo of a waterfall
-    enabled: true
-  - id: rock
-    name: Rock
-    prompt: a photo of a rock
-    enabled: true
-  - id: snow
-    name: Snow
-    prompt: a photo of snow
-    enabled: true
-  - id: cloud
-    name: Cloud
-    prompt: a photo of clouds
-    enabled: true
-  - id: sky
-    name: Sky
-    prompt: a photo of the sky
-    enabled: true
-  - id: fire
-    name: Fire
-    prompt: a photo of fire
-    enabled: true
-
-  # Places, structures, and signs
-  - id: building
-    name: Building
-    prompt: a photo of a building
-    enabled: true
-  - id: house
-    name: House
-    prompt: a photo of a house
-    enabled: true
-  - id: apartment_building
-    name: Apartment Building
-    prompt: a photo of an apartment building
-    enabled: true
-  - id: skyscraper
-    name: Skyscraper
-    prompt: a photo of a skyscraper
-    enabled: true
-  - id: bridge
-    name: Bridge
-    prompt: a photo of a bridge
-    enabled: true
-  - id: road
-    name: Road
-    prompt: a photo of a road
-    enabled: true
-  - id: street
-    name: Street
-    prompt: a photo of a street
-    enabled: true
-  - id: traffic_light
-    name: Traffic Light
-    prompt: a photo of a traffic light
-    enabled: true
-  - id: stop_sign
-    name: Stop Sign
-    prompt: a photo of a stop sign
-    enabled: true
-  - id: sign
-    name: Sign
-    prompt: a photo of a sign
-    enabled: true
-  - id: fence
-    name: Fence
-    prompt: a photo of a fence
-    enabled: true
-  - id: bench
-    name: Bench
-    prompt: a photo of a bench
-    enabled: true
-  - id: fountain
-    name: Fountain
-    prompt: a photo of a fountain
-    enabled: true
-  - id: playground
-    name: Playground
-    prompt: a photo of a playground
-    enabled: true
-  - id: swimming_pool
-    name: Swimming Pool
-    prompt: a photo of a swimming pool
-    enabled: true
-  - id: tent
-    name: Tent
-    prompt: a photo of a tent
-    enabled: true
+- id: person
+  name: 人物
+  prompts:
+  - a photo of a person
+  - a portrait photo of people
+  - a close-up selfie of a face
+  - a photo of a baby or child
+  - a printed photo of people held in a hand
+  - a full body photo of a person standing outdoors
+  - a casual travel photo of a person posing
+  - a photo of a person at a tourist attraction
+  - a photo of people sitting at a table or playing mahjong
+  - a candid photo of a person walking or standing
+  - a photo of a woman or man posing indoors
+  - a photo of a bride or groom
+  - a person wearing a costume at an event
+  - a person at the beach or by the sea
+  - a close-up photo of hands, arms or a person's body
+  - a person sitting in a car, room or restaurant
+  - a close-up photo of a human face or hands
+  - a photo of a baby, toddler or child
+  enabled: true
+- id: group_photo
+  name: 合影
+  prompts:
+  - a group photo of friends or family
+  - a group of people posing together for a photo
+  - a team or class group photograph
+  - two people posing together
+  - a couple taking a photo together
+  - a family photo with several people
+  - friends standing together at a tourist spot
+  - a wedding group photo
+  - a photo of a crowd or many people together
+  enabled: true
+- id: animal
+  name: 动物
+  prompts:
+  - a photo of an animal
+  - a close-up photo of a pet or small animal
+  - a photo of a farm animal
+  - a photo of animals in a natural setting
+  - a photo of an animal statue or realistic animal display
+  - a photo of pet food, pet cage or animal supplies with pets
+  - a photo of farm animals such as horses, cows, sheep, goats or pigs
+  - a photo of small animals such as rabbits, hamsters, mice or squirrels
+  - a photo of animals such as foxes, wolves, otters or seals
+  enabled: true
+- id: cat
+  name: 猫
+  prompts:
+  - a photo of a cat
+  - a close-up photo of a pet cat
+  - a cat sitting indoors at home
+  - a kitten or young cat in a photo
+  - a cat lying on a bed, sofa or floor
+  - a photo of a cat with cat toys or cat supplies
+  - a small kitten playing indoors
+  enabled: true
+- id: dog
+  name: 狗
+  prompts:
+  - a photo of a dog
+  - a close-up photo of a pet dog
+  - a dog walking outdoors with a leash
+  - a puppy or young dog in a photo
+  - a dog sitting indoors at home
+  - a photo of a dog with dog toys or pet supplies
+  - a small puppy playing indoors or outdoors
+  enabled: true
+- id: fish
+  name: 鱼
+  prompts:
+  - a photo of live fish
+  - a photo of fish in an aquarium
+  - colorful tropical fish swimming underwater
+  - koi fish or goldfish in a pond
+  - a close-up photo of fish behind aquarium glass
+  - a photo of sea animals swimming underwater
+  - a photo of marine animals such as sharks, dolphins or whales
+  - a photo of aquarium creatures such as jellyfish, octopus, crab, lobster or shrimp
+  enabled: true
+- id: bird
+  name: 鸟
+  prompts:
+  - a photo of a bird
+  - a close-up photo of a bird
+  - a bird flying or standing outdoors
+  - a colorful bird in a photo
+  - a bird perched on a branch
+  - a bird in a zoo or aviary
+  - a photo of birds such as ducks, geese, swans, chickens or turkeys
+  - a photo of colorful birds such as parrots, peacocks or flamingos
+  - a photo of wild birds such as eagles or owls
+  enabled: true
+- id: panda
+  name: 熊猫
+  prompts:
+  - a photo of a panda
+  - a giant panda eating bamboo
+  - a panda at a zoo
+  - a close-up photo of a panda
+  - a panda sitting or climbing
+  enabled: true
+- id: bear
+  name: 熊
+  prompts:
+  - a photo of a bear
+  - a bear at a zoo
+  - a close-up photo of a bear
+  - a brown bear or polar bear in a photo
+  - a bear standing or walking outdoors
+  enabled: true
+- id: monkey
+  name: 猴子
+  prompts:
+  - a photo of a monkey
+  - a close-up photo of a monkey face
+  - a monkey sitting in a zoo enclosure
+  - a monkey climbing trees or ropes
+  - a monkey eating or sitting outdoors
+  enabled: true
+- id: ape
+  name: 猩猩
+  prompts:
+  - a photo of an orangutan
+  - a photo of a gorilla
+  - a photo of a chimpanzee
+  - an ape sitting in a zoo enclosure
+  - a close-up photo of an ape face
+  enabled: true
+- id: elephant
+  name: 大象
+  prompts:
+  - a photo of an elephant
+  - an elephant at a zoo
+  - a close-up photo of an elephant
+  - elephants walking or standing outdoors
+  - an elephant with a long trunk and large ears
+  enabled: true
+- id: tiger
+  name: 老虎
+  prompts:
+  - a photo of a tiger
+  - a tiger at a zoo
+  - a close-up photo of a tiger face
+  - a tiger walking or lying down
+  - a tiger with orange and black stripes
+  enabled: true
+- id: lion
+  name: 狮子
+  prompts:
+  - a photo of a lion
+  - a lion at a zoo
+  - a close-up photo of a lion face
+  - a male lion with a mane
+  - a lion walking or lying down
+  enabled: true
+- id: leopard
+  name: 豹
+  prompts:
+  - a photo of a leopard
+  - a leopard at a zoo
+  - a close-up photo of a leopard face
+  - a spotted big cat in a photo
+  - a leopard walking or lying down
+  enabled: true
+- id: giraffe
+  name: 长颈鹿
+  prompts:
+  - a photo of a giraffe
+  - a giraffe at a zoo
+  - a close-up photo of a giraffe
+  - a giraffe with a long neck
+  - a giraffe eating leaves
+  enabled: true
+- id: zebra
+  name: 斑马
+  prompts:
+  - a photo of a zebra
+  - a zebra at a zoo
+  - a close-up photo of a zebra
+  - a zebra with black and white stripes
+  - a zebra standing outdoors
+  enabled: true
+- id: deer
+  name: 鹿
+  prompts:
+  - a photo of a deer
+  - a deer at a zoo
+  - a close-up photo of a deer with antlers
+  - a deer standing outdoors
+  - a photo of a reindeer or elk
+  enabled: true
+- id: antelope
+  name: 羚羊
+  prompts:
+  - a photo of an antelope
+  - an antelope at a zoo
+  - a close-up photo of an antelope
+  - an antelope standing outdoors
+  - an antelope with curved horns
+  enabled: true
+- id: penguin
+  name: 企鹅
+  prompts:
+  - a photo of a penguin
+  - a penguin at a zoo or aquarium
+  - a close-up photo of a penguin
+  - penguins standing on rocks or ice
+  - a penguin swimming underwater
+  enabled: true
+- id: turtle
+  name: 乌龟
+  prompts:
+  - a photo of a turtle or tortoise
+  - a turtle at a zoo or aquarium
+  - a close-up photo of a turtle shell
+  - a turtle swimming in water
+  - a tortoise walking on land
+  enabled: true
+- id: lizard
+  name: 蜥蜴
+  prompts:
+  - a photo of a lizard
+  - a lizard in a zoo exhibit
+  - a close-up photo of a lizard
+  - a lizard standing on a branch or rock
+  - a green lizard or gecko in a photo
+  enabled: true
+- id: snake
+  name: 蛇
+  prompts:
+  - a photo of a snake
+  - a snake in a zoo exhibit
+  - a close-up photo of a snake
+  - a snake coiled on the ground
+  - a snake behind glass
+  enabled: true
+- id: frog
+  name: 青蛙
+  prompts:
+  - a photo of a frog or amphibian
+  - a close-up photo of a frog
+  - a frog sitting on a leaf or rock
+  - a frog in a zoo exhibit
+  - a green frog in a photo
+  enabled: true
+- id: wildlife
+  name: 野生动物
+  prompts:
+  - a photo of wildlife
+  - a photo of animals at a zoo
+  - a safari animal or zoo animal
+  - a large wild animal in captivity
+  - a photo of wild mammals outdoors
+  - a photo of unusual animals in a zoo exhibit
+  - a photo of wild mammals such as wolves, foxes, kangaroos, camels or llamas
+  - a photo of small wild animals such as bats, hedgehogs, skunks or raccoons
+  enabled: true
+- id: landscape
+  name: 风景
+  prompts:
+  - a photo of natural scenery and landscape
+  - a photo of mountains, lakes or the sea
+  - a photo of sunrise, sunset or sky
+  - a travel photo of outdoor scenery
+  - a photo of a park, garden, river or lake
+  - a scenic view at a tourist destination
+  - a photo of snow scenery
+  - a winter landscape photo
+  - a photo of waterfalls, caves or rocks
+  - a mountain trail or forest path photo
+  - a photo of forest, mountains, rocks, sky or clouds
+  - a photo of natural fire, campfire or flames outdoors
+  enabled: true
+- id: beach_sea
+  name: 海滩海景
+  prompts:
+  - a photo of a beach and ocean waves
+  - a photo of the coast or seaside
+  - a photo of a tropical sandy beach
+  - a person standing on a beach
+  - a beach travel photo with people
+  - a photo of blue sea and sandy shore
+  - a seaside resort or island beach photo
+  - a photo of the ocean, waves or a seaside view
+  enabled: true
+- id: night_scene
+  name: 夜景
+  prompts:
+  - a night photo of city lights
+  - a photo of fireworks in the night sky
+  - a night view of an illuminated skyline
+  enabled: true
+- id: food
+  name: 美食
+  prompts:
+  - a photo of food
+  - a photo of dishes on a dining table
+  - a photo of dessert or drinks
+  - a photo of raw seafood such as crabs or fish
+  - a photo of fruits or vegetables at a market
+  - a photo of hot pot or soup in a restaurant
+  - a close-up photo of a cooked meal in a bowl or plate
+  - a photo of snacks, fruit or packaged food on a table
+  - a casual phone photo of restaurant dishes
+  - a photo of street food or snacks
+  - a photo of a drink bottle or beverage display
+  - a photo of packaged snacks or dessert
+  - a photo of food ingredients before cooking
+  - a photo of takeout food, lunch box or packaged meal
+  - a close-up photo of fruit, cake, bread or snacks
+  - a photo of fresh fruit such as apples, bananas, oranges, strawberries or grapes
+  - a photo of vegetables such as tomatoes, carrots, broccoli, corn, potatoes or mushrooms
+  - a photo of fast food such as sandwiches, hamburgers, hot dogs, pizza or tacos
+  - a photo of drinks such as coffee, tea, juice, beer, wine or bottled water
+  enabled: true
+- id: city
+  name: 城市
+  prompts:
+  - a photo of a city street
+  - a photo of an urban skyline with skyscrapers
+  - a photo of a busy city intersection
+  - a street view in a city or town
+  - a photo of shops, signs and buildings along a street
+  - a photo of a city square or public place
+  - a photo of storefronts and shop signs
+  - a photo of a city sidewalk or pedestrian street
+  - a photo of a hotel, restaurant or commercial street
+  - a photo of roads, streets, traffic lights, stop signs or road signs
+  - a photo of fences, benches, fountains or public street furniture
+  enabled: true
+- id: architecture
+  name: 建筑
+  prompts:
+  - a photo of a building or architecture
+  - a photo of a temple, church or historical architecture
+  - a close-up photo of building facade details
+  - a photo of a building entrance or storefront
+  - a photo of a museum, exhibition hall or public building
+  - a photo of signs and walls at a tourist site
+  - a photo of an indoor exhibition space
+  - a photo of a hotel building or lobby
+  - a photo of a train station or airport building
+  - a photo of houses, apartment buildings, skyscrapers or bridges
+  - a photo of doors, windows, walls or building entrances
+  enabled: true
+- id: plants_flowers
+  name: 植物花卉
+  prompts:
+  - a close-up photo of flowers
+  - a photo of plants, leaves or trees
+  - a photo of flowers in a garden
+  - a photo of grass, leaves, cactus or houseplants
+  - a close-up photo of tree branches, plants or foliage
+  enabled: true
+- id: screenshot
+  name: 截图
+  prompts:
+  - a screenshot of a phone or computer screen
+  - a screenshot of a mobile app user interface
+  - a photo of a smartphone screen showing an app
+  - a photo of a laptop or computer monitor on a desk
+  - a close-up photo of a TV screen showing a video game
+  - a smartphone screenshot with chat messages
+  - a screenshot of an order, payment or delivery app
+  - a screenshot containing QR codes or app notifications
+  - a vertical phone screenshot with Chinese text
+  - a screenshot of a map or travel app
+  - a screenshot of a social media post
+  - a screenshot of a shopping app product page
+  - a screenshot of a train or flight booking app
+  - a photo of a television or projector screen showing a movie
+  - a photo of a screen showing subtitles, menus or video playback
+  enabled: true
+- id: document
+  name: 文档
+  prompts:
+  - a photo of a document, receipt or paper
+  - an image containing mostly text
+  - a photo of a whiteboard or presentation slide
+  - a photo of handwriting on paper
+  - a photo of a receipt, ticket, bill or invoice
+  - a photo of a sign, label, barcode or QR code
+  - a photo of an ID card, certificate or printed form
+  - a close-up photo of product labels or instructions
+  - a photo of a menu, signboard or information board
+  - a photo of exhibition text or museum label
+  - a photo of instructions, warranty card or package label
+  enabled: true
+- id: vehicle
+  name: 交通工具
+  prompts:
+  - a photo of a car
+  - a photo of an airplane, train or ship
+  - a photo of a bicycle or motorcycle
+  - a view from inside a car with dashboard and windshield
+  - a photo of a train station, subway station or airport
+  - a photo inside a bus, train or airplane
+  - a photo of a platform, terminal or station sign
+  - a photo of luggage at an airport or station
+  - a photo of road traffic, taxi or bus stop
+  - a photo of a train platform with passengers
+  - a photo of cars, trucks, buses, vans, taxis or emergency vehicles
+  - a photo of trains, subway trains, airplanes, helicopters, boats or ships
+  - a photo of bicycles, motorcycles, scooters, wheelchairs or strollers
+  enabled: true
+- id: sports
+  name: 运动
+  prompts:
+  - a photo of people playing sports
+  - a photo of a sports game or athletic competition
+  - a photo of someone exercising at a gym
+  - a photo of sports balls such as soccer balls, basketballs, baseballs or tennis balls
+  - a photo of sports equipment such as rackets, surfboards, skis, snowboards or dumbbells
+  enabled: true
+- id: performance_event
+  name: 演出活动
+  prompts:
+  - a photo of a concert or live music performance
+  - a performer singing on a stage
+  - a photo of a crowd at a stage event
+  - a photo of musical instruments on a stage such as guitars, pianos, violins or drums
+  enabled: true
+- id: product_object
+  name: 商品实物
+  prompts:
+  - a product photo of an item on a plain background
+  - a close-up product shot for online shopping
+  - a photo of a single object held in a hand
+  - a photo of an electronic device or accessory
+  - a photo of a product box or packaged item
+  - a photo of a personal item placed on a table
+  - a casual product photo taken at home
+  - a photo of a camera, phone, computer or gadget
+  - a photo of appliance, tool or electronic accessory
+  - a photo of a toy box, package or retail item
+  - a photo of boxed products, parcels or retail packaging
+  - a close-up photo of a small object, accessory or tool
+  - a photo of a single retail object such as a bottle, can, kettle, pan or pot
+  - a photo of musical instruments such as guitars, pianos, violins or drums
+  enabled: true
+- id: indoor_life
+  name: 室内生活
+  prompts:
+  - a photo of an indoor room
+  - a photo of home interior and daily life
+  - a photo of an indoor place like a mall or restaurant
+  - a photo of everyday objects on a table or shelf
+  - a casual indoor snapshot at home
+  - a photo of household items in a room
+  - a photo of a closet, drawer, shelf or storage space
+  - a photo inside a hotel room or apartment
+  - a photo of a bathroom, kitchen or hallway
+  - a photo of furniture or home storage
+  - a photo of bedding, sofa or household storage
+  - a photo taken inside a hotel lobby or room
+  - a photo of a chair, table, cabinet or appliance in a room
+  - a photo of indoor clutter, boxes or daily household items
+  - a photo of furniture such as chairs, sofas, tables, desks, beds, pillows or blankets
+  - a photo of household appliances such as refrigerators, ovens, microwaves, fans or air conditioners
+  - a photo of bathroom or kitchen fixtures such as sinks, toilets, bathtubs, showers or washing machines
+  enabled: true
+- id: travel_attraction
+  name: 旅行景点
+  prompts:
+  - a travel photo at a tourist attraction
+  - a photo of a scenic spot or landmark
+  - a photo at a theme park or amusement park
+  - a photo inside a museum or exhibition
+  - a photo of a famous landmark with tourists
+  - a photo at Universal Studios or a theme park
+  - a photo of a tourist sign or attraction entrance
+  - a photo in a scenic area with people
+  - a travel photo at a temple, shrine or historic site
+  - a photo at a resort or sightseeing spot
+  enabled: true
+- id: transport_scene
+  name: 交通场景
+  prompts:
+  - a photo of a train station or railway platform
+  - a photo of an airport terminal or boarding gate
+  - a photo of a subway station or transit sign
+  - a photo taken while waiting for public transportation
+  - a photo of station signs and passengers
+  - a photo of traffic lights, stop signs, street signs or bus stop signs
+  enabled: true
+- id: everyday_objects
+  name: 日常物品
+  prompts:
+  - a casual photo of household objects
+  - a photo of personal belongings on a table or floor
+  - a photo of storage boxes, drawers or shelves
+  - a photo of everyday items at home
+  - a photo of small accessories or miscellaneous objects
+  - a photo of tableware such as plates, bowls, cups, mugs, forks, spoons or knives
+  - a photo of household containers such as bottles, cans, baskets or trash cans
+  - a photo of small household objects such as keys, locks, flashlights or umbrellas
+  enabled: true
+- id: tickets_documents
+  name: 票据证件
+  prompts:
+  - a photo of a receipt, ticket, bill or invoice
+  - a photo of an ID card, certificate or document card
+  - a close-up photo of a barcode, QR code or product label
+  - a photo of a printed notice, form or instruction label
+  - a screenshot of a ticket, order or payment record
+  enabled: true
+- id: toys_figures
+  name: 玩具手办
+  prompts:
+  - a photo of plush toys or stuffed animals
+  - a photo of figurines, dolls or toy models
+  - a close-up photo of a cute toy or character figure
+  - a photo of toy blocks or collectible figures
+  - a photo of toys such as teddy bears, dolls or stuffed animals
+  enabled: true
+- id: clothing_bags
+  name: 服饰箱包
+  prompts:
+  - a photo of clothes, shoes or fashion accessories
+  - a photo of a bag, suitcase or backpack
+  - a photo of shoes on the floor or in a box
+  - a photo of clothing hanging in a closet
+  - a photo of wearable items or personal accessories
+  - a photo of clothing such as shirts, t-shirts, jackets, coats, dresses, skirts, pants or jeans
+  - a photo of footwear such as shoes, sneakers or boots
+  - a photo of accessories such as hats, helmets, glasses, sunglasses, handbags, backpacks or suitcases
+  enabled: true
+- id: amusement_park
+  name: 游乐园
+  prompts:
+  - a photo at an amusement park or theme park
+  - a photo of a roller coaster or ferris wheel
+  - a photo of a theme park parade or show
+  - a photo at Universal Studios or Disneyland
+  - a photo of colorful amusement park decorations
+  enabled: true
+- id: museum_exhibition
+  name: 展览博物馆
+  prompts:
+  - a photo inside a museum or exhibition hall
+  - a photo of artwork or exhibits in a gallery
+  - a photo of museum display cases and labels
+  - a photo at an art exhibition
+  - a photo of cultural relics or historical displays
+  enabled: true
+- id: shopping_mall
+  name: 商场购物
+  prompts:
+  - a photo inside a shopping mall or store
+  - a photo of retail shelves or product displays
+  - a photo of a supermarket or convenience store
+  - a photo of shop signs and merchandise
+  - a photo of clothes or products in a store
+  enabled: true
+- id: hotel_stay
+  name: 酒店住宿
+  prompts:
+  - a photo of a hotel room or bed
+  - a photo inside a hotel lobby or corridor
+  - a photo of hotel bathroom or amenities
+  - a photo of a resort hotel or accommodation
+  - a photo of luggage in a hotel room
+  enabled: true
+- id: aquarium
+  name: 水族馆
+  prompts:
+  - a photo inside an aquarium
+  - a photo of fish or sea animals behind glass
+  - a large aquarium tank with marine life
+  - an underwater aquarium exhibit
+  - people watching fish in an aquarium
+  - an aquarium exhibit with sharks, dolphins, seals, turtles, jellyfish or octopus
+  enabled: true
+- id: zoo
+  name: 动物园
+  prompts:
+  - a photo of animals at a zoo
+  - a photo of animal habitats or zoo exhibits
+  - a zoo enclosure with animals
+  - people watching animals at a zoo
+  - a captive wildlife exhibit at a zoo
+  - a zoo exhibit with horses, deer, bears, monkeys, elephants, giraffes, zebras or big cats
+  enabled: true
+- id: snow_skiing
+  name: 雪景滑雪
+  prompts:
+  - a photo of snow scenery
+  - a photo of people skiing or snowboarding
+  - a photo at a ski resort
+  - a winter travel photo with snow
+  - a photo of snowy mountains or ski lifts
+  enabled: true
+- id: wedding_celebration
+  name: 婚礼庆典
+  prompts:
+  - a wedding photo with bride and groom
+  - a photo of a wedding ceremony or banquet
+  - a photo of people at a celebration event
+  - a photo of a red festive wedding decoration
+  - a photo of a bride wearing a wedding dress
+  enabled: true
+- id: electronics
+  name: 电子设备
+  prompts:
+  - a photo of a phone, camera or computer
+  - a photo of electronic devices or gadgets
+  - a photo of chargers, cables or accessories
+  - a photo of a game console or controller
+  - a photo of home appliances or digital products
+  - a photo of smartphones, telephones, laptops, desktop computers, monitors, keyboards, mice or tablets
+  - a photo of cameras, headphones, speakers, microphones, printers, routers or game controllers
+  enabled: true
+- id: pet_supplies
+  name: 宠物用品
+  prompts:
+  - a photo of pet supplies, pet food or cat litter
+  - a photo of a cat tree, pet cage or pet bed
+  - a photo of toys, bowls or accessories for pets
+  - a photo of pet products in a home or store
+  - a photo of a litter box or pet cleaning supplies
+  enabled: true
+- id: screen_media
+  name: 影视屏幕
+  prompts:
+  - a photo of a television screen showing a movie
+  - a photo of a projector screen or cinema screen
+  - a photo of a video playing on a monitor or TV
+  - a photo of subtitles on a movie or drama screen
+  - a photo of a stage screen, billboard screen or display
+  - a photo of a television, remote control, computer monitor or display screen
+  enabled: true
+- id: healthcare
+  name: 医疗健康
+  prompts:
+  - a photo related to healthcare, medicine or a hospital
+  - a photo of medicine, pills, medical supplies or test results
+  - a close-up photo of skin, injury, teeth or body condition
+  - a photo inside a clinic, pharmacy or hospital room
+  - a photo of health products, mask or thermometer
+  enabled: true
+- id: office_study
+  name: 办公学习
+  prompts:
+  - a photo of a desk with books, notebooks or stationery
+  - a photo of an office desk, chair or workspace
+  - a photo of study materials, pens or papers on a table
+  - a photo inside a classroom, meeting room or office
+  - a photo of a laptop and documents on a work desk
+  - a photo of stationery such as notebooks, pens, pencils, scissors or rulers
+  - a photo of office equipment such as printers, keyboards, monitors or desk lamps
+  enabled: true
+- id: camping_outdoor
+  name: 户外露营
+  prompts:
+  - a photo of camping gear, tent or outdoor equipment
+  - a photo of a picnic, barbecue or outdoor cooking setup
+  - a photo of hiking gear, backpacks or outdoor supplies
+  - a photo of a campsite, camp chair or folding table
+  - a photo of outdoor travel gear in a car or on the ground
+  - a photo of tents, ladders, flashlights, campfire or outdoor tools
+  enabled: true
+- id: packaging_parcels
+  name: 包装快递
+  prompts:
+  - a photo of cardboard boxes, packages or delivery parcels
+  - a photo of unpacked products, bubble wrap or packaging
+  - a photo of shipping labels, product boxes or cartons
+  - a photo of stacked boxes or storage packages
+  - a photo of online shopping parcels at home
+  enabled: true
+- id: books_media
+  name: 书籍影音
+  prompts:
+  - a photo of books, magazines or printed albums
+  - a photo of DVDs, CDs, records or media packaging
+  - a photo of a bookshelf, book cover or comic book
+  - a close-up photo of a music album or movie disc
+  - a photo of reading materials on a table
+  - a photo of books, notebooks, magazines or printed pages
+  enabled: true
+- id: jewelry_accessories
+  name: 珠宝饰品
+  prompts:
+  - a close-up photo of jewelry, rings or necklaces
+  - a photo of earrings, bracelets or fashion accessories
+  - a photo of a watch, ring box or small ornament
+  - a photo of gold, silver or shiny accessories
+  - a product photo of jewelry on a table or in a hand
+  - a close-up photo of watches, rings, necklaces or fashion jewelry
+  enabled: true
+- id: money_tickets
+  name: 钱币票券
+  prompts:
+  - a photo of cash, coins, banknotes or money
+  - a photo of tickets, coupons, cards or vouchers
+  - a close-up photo of a train ticket, receipt or pass
+  - a photo of foreign currency or collectible coins
+  - a photo of admission tickets or travel passes
+  enabled: true
+- id: home_renovation
+  name: 家居装修
+  prompts:
+  - a photo of home renovation, repair or construction indoors
+  - a photo of walls, floor, doors, lights or fixtures
+  - a photo of bathroom, kitchen fixtures or plumbing
+  - a photo of furniture installation or home improvement
+  - a close-up photo of household hardware, pipes or tools
+  - a photo of tools such as hammers, screwdrivers, wrenches, pliers, saws or drills
+  - a photo of home fixtures such as doors, windows, lamps, mirrors, clocks, curtains or rugs
+  enabled: true
+- id: park_garden
+  name: 园林公园
+  prompts:
+  - a photo of a park or garden
+  - a photo of trees, paths and lawns
+  - a photo of flowers and landscaping in a park
+  - a photo of a courtyard garden or traditional garden
+  - a photo of people walking in a park
+  - a photo of playgrounds, benches, fountains, grass, trees or flowers in a park
+  enabled: true
+- id: water_lake
+  name: 水域湖泊
+  prompts:
+  - a photo of a lake, river or pond
+  - a photo of water scenery with boats
+  - a photo of reflections on water
+  - a photo of waterfront or riverside scenery
+  - a photo of a pool or hot spring
+  - a photo of rivers, lakes, waterfalls, oceans, boats or swimming pools
+  enabled: true

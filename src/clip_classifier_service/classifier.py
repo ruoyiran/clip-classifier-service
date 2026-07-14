@@ -12,6 +12,7 @@ class ScoredLabel:
     id: str
     name: str
     score: float
+    similarity: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -42,7 +43,12 @@ class ClipClassifier:
         self.labels = list(labels)
         self.backend = backend
         self.model_name = model_name
-        prompts = [label.prompt for label in self.labels]
+        self.prompt_label_indices: list[list[int]] = []
+        prompts = []
+        for label in self.labels:
+            start = len(prompts)
+            prompts.extend(label.prompts)
+            self.prompt_label_indices.append(list(range(start, len(prompts))))
         self.text_features = self._normalize(self.backend.encode_texts(prompts))
         self.ready = True
 
@@ -54,7 +60,8 @@ class ClipClassifier:
 
         started = time.perf_counter()
         image_features = self._normalize(self.backend.encode_image_bytes(image_bytes))
-        scores = (100.0 * image_features @ self.text_features.T).softmax(dim=-1).squeeze(0)
+        similarities = self._label_similarities(image_features).squeeze(0)
+        scores = (100.0 * similarities).softmax(dim=-1)
         count = min(top_k, len(self.labels))
         values, indices = torch.topk(scores, k=count)
 
@@ -64,7 +71,14 @@ class ClipClassifier:
             if score < threshold:
                 continue
             label = self.labels[int(index)]
-            ranked.append(ScoredLabel(id=label.id, name=label.name, score=score))
+            ranked.append(
+                ScoredLabel(
+                    id=label.id,
+                    name=label.name,
+                    score=score,
+                    similarity=float(similarities[int(index)]),
+                )
+            )
 
         elapsed_ms = (time.perf_counter() - started) * 1000
         return ClassificationResult(model=self.model_name, labels=ranked, elapsed_ms=elapsed_ms)
@@ -84,20 +98,30 @@ class ClipClassifier:
 
         started = time.perf_counter()
         image_features = self._normalize(self.backend.encode_image_batch(image_batch))
-        scores = (100.0 * image_features @ self.text_features.T).softmax(dim=-1)
+        similarities = self._label_similarities(image_features)
+        scores = (100.0 * similarities).softmax(dim=-1)
         count = min(top_k, len(self.labels))
         values, indices = torch.topk(scores, k=count, dim=-1)
         elapsed_ms = (time.perf_counter() - started) * 1000
 
         results: list[ClassificationResult] = []
-        for row_values, row_indices in zip(values.tolist(), indices.tolist(), strict=True):
+        for row_index, (row_values, row_indices) in enumerate(
+            zip(values.tolist(), indices.tolist(), strict=True)
+        ):
             ranked: list[ScoredLabel] = []
             for value, index in zip(row_values, row_indices, strict=True):
                 score = float(value)
                 if score < threshold:
                     continue
                 label = self.labels[int(index)]
-                ranked.append(ScoredLabel(id=label.id, name=label.name, score=score))
+                ranked.append(
+                    ScoredLabel(
+                        id=label.id,
+                        name=label.name,
+                        score=score,
+                        similarity=float(similarities[row_index, int(index)]),
+                    )
+                )
             results.append(
                 ClassificationResult(
                     model=self.model_name,
@@ -106,6 +130,16 @@ class ClipClassifier:
                 )
             )
         return results
+
+    def _label_similarities(self, image_features: torch.Tensor) -> torch.Tensor:
+        prompt_similarities = image_features @ self.text_features.T
+        return torch.stack(
+            [
+                prompt_similarities[:, prompt_indices].max(dim=1).values
+                for prompt_indices in self.prompt_label_indices
+            ],
+            dim=1,
+        )
 
     @staticmethod
     def _normalize(features: torch.Tensor) -> torch.Tensor:

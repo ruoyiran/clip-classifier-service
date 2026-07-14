@@ -35,6 +35,7 @@ def test_classifier_returns_ranked_scores() -> None:
 
     assert result.labels[0].id == "cat"
     assert result.labels[0].score > result.labels[1].score
+    assert result.labels[0].similarity == 1.0
     assert result.model == "test-backend"
 
 
@@ -82,3 +83,50 @@ def test_classifier_classifies_batch_with_single_backend_call() -> None:
 
     assert [result.labels[0].id for result in results] == ["cat", "dog"]
     assert backend.calls == 1
+
+
+def test_classifier_uses_best_prompt_per_label() -> None:
+    labels = [
+        Label(
+            id="cat",
+            name="Cat",
+            prompt="cat prompt",
+            prompts=("cat prompt", "kitten prompt"),
+            enabled=True,
+        ),
+        Label(id="dog", name="Dog", prompt="dog prompt", enabled=True),
+    ]
+
+    class MultiPromptBackend(FakeBackend):
+        def encode_texts(self, prompts: list[str]) -> torch.Tensor:
+            assert prompts == ["cat prompt", "kitten prompt", "dog prompt"]
+            return self.text_features
+
+    backend = MultiPromptBackend(
+        image_features=torch.tensor([[0.0, 1.0]]),
+        text_features=torch.tensor([[1.0, 0.0], [0.0, 1.0], [1.0, 0.0]]),
+    )
+    classifier = ClipClassifier(labels=labels, backend=backend)
+
+    result = classifier.classify(image_bytes=b"image", top_k=2, threshold=0.0)
+
+    assert result.labels[0].id == "cat"
+    assert result.labels[0].similarity == 1.0
+
+
+def test_similarity_is_raw_cosine_not_softmax_score() -> None:
+    labels = [
+        Label(id="cat", name="Cat", prompt="cat prompt", enabled=True),
+        Label(id="dog", name="Dog", prompt="dog prompt", enabled=True),
+    ]
+    backend = FakeBackend(
+        image_features=torch.tensor([[1.0, 0.0]]),
+        text_features=torch.tensor([[1.0, 1.0], [0.0, 1.0]]),
+    )
+    classifier = ClipClassifier(labels=labels, backend=backend)
+
+    result = classifier.classify(image_bytes=b"image", top_k=2, threshold=0.0)
+
+    assert result.labels[0].id == "cat"
+    assert result.labels[0].similarity < 1.0
+    assert result.labels[0].score != result.labels[0].similarity

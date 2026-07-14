@@ -10,3 +10,4 @@ models/
 config/server_private.key
 config/server_public.key
 .env
+.DS_Store

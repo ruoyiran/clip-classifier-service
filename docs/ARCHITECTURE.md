@@ -7,9 +7,10 @@ Serve `hf-hub:apple/DFN5B-CLIP-ViT-H-14-378` as a fixed-label image classificati
 ## Runtime Components
 
 1. `Settings` loads configuration from defaults, `.env`, and `CLIP_` environment variables.
-2. `load_labels()` reads `config/labels.yaml` and returns enabled labels only.
+2. `load_labels()` reads `config/labels.yaml` and returns enabled labels only. Labels may define one `prompt` or multiple `prompts`.
 3. `OpenClipBackend` loads OpenCLIP model weights and preprocessing transforms.
 4. `ClipClassifier` encodes all label prompts once and keeps normalized text features in memory.
+   A label's similarity is the maximum cosine similarity across its prompts.
 5. FastAPI serves classification, health, readiness, encryption metadata, and Prometheus metrics endpoints.
    If `CLIP_BASE_PATH` is configured, every route is mounted under that prefix.
 6. Optional static Bearer Token authentication protects every API route when `CLIP_AUTH_ENABLED=true`.
@@ -43,7 +44,7 @@ POST /v1/classify, or POST <base_path>/v1/classify when CLIP_BASE_PATH is set
   -> asyncio.to_thread(classifier.classify)
   -> Pillow decode and pixel guard
   -> OpenCLIP image encode
-  -> similarity ranking
+  -> similarity ranking with softmax scores and raw best-prompt similarity
   -> JSON response
 ```
 

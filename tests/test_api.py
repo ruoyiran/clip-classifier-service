@@ -20,7 +20,7 @@ class FakeClassifier:
         assert threshold == 0.25
         return ClassificationResult(
             model="fake-model",
-            labels=[ScoredLabel(id="cat", name="Cat", score=0.99)],
+            labels=[ScoredLabel(id="cat", name="Cat", score=0.99, similarity=0.88)],
             elapsed_ms=1.5,
         )
 
@@ -70,7 +70,9 @@ def test_base_path_classify_endpoint(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
-    assert response.json()["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
+    assert response.json()["labels"] == [
+        {"id": "cat", "name": "Cat", "score": 0.99, "similarity": 0.88}
+    ]
 
 
 @pytest.fixture
@@ -265,7 +267,9 @@ def test_classify_endpoint_returns_top_labels(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
-    assert response.json()["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
+    assert response.json()["labels"] == [
+        {"id": "cat", "name": "Cat", "score": 0.99, "similarity": 0.88}
+    ]
 
 
 def test_public_key_endpoint_returns_encryption_metadata(tmp_path: Path) -> None:
@@ -312,7 +316,9 @@ def test_encrypted_classify_endpoint_returns_top_labels(tmp_path: Path) -> None:
     )
 
     assert response.status_code == 200
-    assert response.json()["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
+    assert response.json()["labels"] == [
+        {"id": "cat", "name": "Cat", "score": 0.99, "similarity": 0.88}
+    ]
 
 
 def test_encrypted_classify_rejects_tampered_payload(tmp_path: Path) -> None:
@@ -362,7 +368,9 @@ def test_encrypted_batch_classify_returns_per_image_results(tmp_path: Path) -> N
 
     assert response.status_code == 200
     assert [item["filename"] for item in response.json()["results"]] == ["one.jpg", "two.jpg"]
-    assert response.json()["results"][0]["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
+    assert response.json()["results"][0]["labels"] == [
+        {"id": "cat", "name": "Cat", "score": 0.99, "similarity": 0.88}
+    ]
 
 
 def test_require_encrypted_uploads_rejects_plaintext_classify(tmp_path: Path) -> None:
@@ -476,7 +484,9 @@ def test_batch_classify_returns_per_image_results(tmp_path: Path) -> None:
 
     assert response.status_code == 200
     assert [item["filename"] for item in response.json()["results"]] == ["one.jpg", "two.jpg"]
-    assert response.json()["results"][0]["labels"] == [{"id": "cat", "name": "Cat", "score": 0.99}]
+    assert response.json()["results"][0]["labels"] == [
+        {"id": "cat", "name": "Cat", "score": 0.99, "similarity": 0.88}
+    ]
 
 
 def test_batch_classify_rejects_too_many_files(tmp_path: Path) -> None:

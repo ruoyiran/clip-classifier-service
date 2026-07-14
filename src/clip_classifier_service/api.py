@@ -58,7 +58,12 @@ def serialize_result(result):
         "model": result.model,
         "elapsed_ms": result.elapsed_ms,
         "labels": [
-            {"id": label.id, "name": label.name, "score": label.score}
+            {
+                "id": label.id,
+                "name": label.name,
+                "score": label.score,
+                "similarity": label.similarity,
+            }
             for label in result.labels
         ],
     }
