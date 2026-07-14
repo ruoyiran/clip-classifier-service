@@ -92,8 +92,8 @@ Use one process per GPU unless memory and latency have been measured. Multiple U
 
 - `CLIP_AUTH_ENABLED`: Requires `Authorization: Bearer <token>` on every API route.
 - `CLIP_API_TOKENS`: Comma-separated valid tokens; startup fails if auth is enabled and empty.
-- `CLIP_MAX_IMAGE_BYTES`: Per-image upload byte limit.
-- `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`: Per-image encrypted payload byte limit.
+- `CLIP_MAX_IMAGE_BYTES`: Per-image upload byte limit. Default: `31457280` bytes, 30 MiB.
+- `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`: Per-image encrypted payload byte limit. Default: `44040192` bytes, 42 MiB.
 - `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`: Request body allowance for multipart overhead.
 - `CLIP_MAX_IMAGE_PIXELS`: Decoded pixel limit for Pillow.
 - Invalid image payloads are converted to `400`.

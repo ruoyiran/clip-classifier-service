@@ -94,6 +94,10 @@ Start-Service ClipClassifierService
 
 ## API
 
+- Single-image payload limits:
+  - Plain/decrypted image bytes: `31457280` bytes, 30 MiB.
+  - Encrypted JSON request body: `44040192` bytes, 42 MiB.
+
 - `GET /healthz`
 - `GET /readyz`
 - `GET /metrics`
@@ -129,7 +133,7 @@ Encrypted example:
 
 - Put this service behind an internal gateway or reverse proxy for TLS and rate limiting.
 - Enable `CLIP_AUTH_ENABLED=true` and keep `CLIP_API_TOKENS` private.
-- Keep `CLIP_MAX_IMAGE_BYTES`, `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`, and `CLIP_MAX_IMAGE_PIXELS` conservative to prevent upload, decompression, and memory abuse.
+- Keep `CLIP_MAX_IMAGE_BYTES`, `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`, `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`, and `CLIP_MAX_IMAGE_PIXELS` conservative to prevent upload, decompression, and memory abuse.
 - Keep `config/server_private.key` private and out of git.
 - Pre-download model weights during deployment, not on first live request.
 - Monitor `/metrics` for latency, request status, and error rates using a client that sends the Bearer token.

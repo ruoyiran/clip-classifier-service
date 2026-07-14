@@ -21,8 +21,8 @@ class Settings(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 8000
     log_level: str = "info"
-    max_image_bytes: int = 8 * 1024 * 1024
-    max_encrypted_image_bytes: int = 12 * 1024 * 1024
+    max_image_bytes: int = 30 * 1024 * 1024
+    max_encrypted_image_bytes: int = 42 * 1024 * 1024
     max_multipart_overhead_bytes: int = 64 * 1024
     max_image_pixels: int = 16_000_000
     max_batch_size: int = 8

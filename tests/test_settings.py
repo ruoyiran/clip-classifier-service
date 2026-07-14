@@ -13,7 +13,8 @@ def test_settings_uses_safe_defaults(tmp_path: Path) -> None:
     assert settings.auth_disable_docs is True
     assert settings.device == "cuda"
     assert settings.precision == "fp16"
-    assert settings.max_image_bytes == 8 * 1024 * 1024
+    assert settings.max_image_bytes == 30 * 1024 * 1024
+    assert settings.max_encrypted_image_bytes == 42 * 1024 * 1024
     assert settings.model_cache_dir == tmp_path / "models"
 
 

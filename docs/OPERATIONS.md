@@ -22,8 +22,8 @@ All service settings can be provided with `CLIP_` environment variables.
 - `CLIP_LABELS_PATH`: Label YAML path. Default: `config/labels.yaml`.
 - `CLIP_DEVICE`: Runtime device. Default: `cuda`.
 - `CLIP_PRECISION`: `fp16` or `fp32`. Default: `fp16`.
-- `CLIP_MAX_IMAGE_BYTES`: Per-image upload byte limit.
-- `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`: Per-image encrypted JSON payload limit.
+- `CLIP_MAX_IMAGE_BYTES`: Per-image upload byte limit. Default: `31457280` bytes, 30 MiB.
+- `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`: Per-image encrypted JSON payload limit. Default: `44040192` bytes, 42 MiB.
 - `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`: Request body overhead allowance.
 - `CLIP_MAX_IMAGE_PIXELS`: Decoded image pixel limit.
 - `CLIP_MAX_BATCH_SIZE`: Max images per batch request.
