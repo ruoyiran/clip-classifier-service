@@ -120,11 +120,28 @@ def extract_batch_results(response: dict, expected_count: int) -> list[dict]:
     return results
 
 
-def query_string(top_k: int, threshold: float | None) -> str:
+def query_string(top_k: int, threshold: float | None, include_embedding: bool) -> str:
     query = f"top_k={top_k}"
     if threshold is not None:
         query += f"&threshold={threshold}"
+    if include_embedding:
+        query += "&include_embedding=true"
     return query
+
+
+def compact_embeddings_for_print(value):
+    if isinstance(value, list):
+        return [compact_embeddings_for_print(item) for item in value]
+    if not isinstance(value, dict):
+        return value
+
+    data = {key: compact_embeddings_for_print(item) for key, item in value.items()}
+    embedding = data.get("embedding")
+    if isinstance(embedding, dict) and isinstance(embedding.get("vector"), list):
+        vector = embedding.pop("vector")
+        embedding["vector_length"] = len(vector)
+        embedding["vector_preview"] = vector[:5]
+    return data
 
 
 def main() -> int:
@@ -157,6 +174,24 @@ def main() -> int:
         type=float,
         default=None,
         help="Optional service score threshold. Omitted by default.",
+    )
+    parser.add_argument(
+        "--include-embedding",
+        action="store_true",
+        help="Request normalized image embeddings in responses.",
+    )
+    parser.add_argument(
+        "--print-full-embedding",
+        action="store_true",
+        help="Print full embedding vectors instead of compact previews.",
+    )
+    parser.add_argument(
+        "--public-key",
+        default=os.getenv("PC_CLIP_PUBLIC_KEY") or os.getenv("OPENAI_CLIP_PUBLIC_KEY"),
+        help=(
+            "Cached encryption public key. When set, skips GET /v1/encryption/public-key. "
+            "Can also be set with PC_CLIP_PUBLIC_KEY or OPENAI_CLIP_PUBLIC_KEY."
+        ),
     )
     parser.add_argument(
         "--batch-size",
@@ -194,7 +229,7 @@ def main() -> int:
 
     base_url = args.base_url.rstrip("/")
     headers = build_headers(args.bearer_token, args.internal_api_key)
-    query = query_string(args.top_k, args.threshold)
+    query = query_string(args.top_k, args.threshold, args.include_embedding)
 
     try:
         encrypt_image_for_server = load_encrypt_image_for_server()
@@ -208,19 +243,25 @@ def main() -> int:
         )
         print(json.dumps(ready, ensure_ascii=False))
 
-        print(f"[2/3] GET {base_url}/v1/encryption/public-key")
-        public_key_response = request_json(
-            "GET",
-            f"{base_url}/v1/encryption/public-key",
-            headers,
-            timeout=args.timeout,
-        )
-        print(json.dumps({"alg": public_key_response.get("alg")}, ensure_ascii=False))
+        if args.public_key:
+            public_key = args.public_key
+            print("[2/3] using cached encryption public key")
+            print(json.dumps({"alg": "AES-256-GCM+SealedBox-v1"}, ensure_ascii=False))
+        else:
+            print(f"[2/3] GET {base_url}/v1/encryption/public-key")
+            public_key_response = request_json(
+                "GET",
+                f"{base_url}/v1/encryption/public-key",
+                headers,
+                timeout=args.timeout,
+            )
+            print(json.dumps({"alg": public_key_response.get("alg")}, ensure_ascii=False))
+            public_key = public_key_response["public_key"]
 
         if len(image_paths) == 1:
             image_path = image_paths[0]
             payload = encrypt_image_for_server(
-                public_key_response["public_key"],
+                public_key,
                 image_path.read_bytes(),
             )
             payload["filename"] = image_path.name
@@ -241,7 +282,7 @@ def main() -> int:
                 items = []
                 for image_path in batch:
                     payload = encrypt_image_for_server(
-                        public_key_response["public_key"],
+                        public_key,
                         image_path.read_bytes(),
                     )
                     payload["filename"] = image_path.name
@@ -263,7 +304,8 @@ def main() -> int:
                     extract_batch_results(response, expected_count=len(batch))
                 )
             result = {"results": collected_results}
-        print(json.dumps(result, ensure_ascii=False, indent=2))
+        printable = result if args.print_full_embedding else compact_embeddings_for_print(result)
+        print(json.dumps(printable, ensure_ascii=False, indent=2))
     except Exception as exc:
         print(f"Test failed: {exc}", file=sys.stderr)
         return 1

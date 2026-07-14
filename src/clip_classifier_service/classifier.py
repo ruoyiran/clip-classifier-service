@@ -20,6 +20,7 @@ class ClassificationResult:
     model: str
     labels: list[ScoredLabel]
     elapsed_ms: float
+    embedding: list[float] | None = None
 
 
 class ClassifierBackend(Protocol):
@@ -52,7 +53,13 @@ class ClipClassifier:
         self.text_features = self._normalize(self.backend.encode_texts(prompts))
         self.ready = True
 
-    def classify(self, image_bytes: bytes, top_k: int, threshold: float) -> ClassificationResult:
+    def classify(
+        self,
+        image_bytes: bytes,
+        top_k: int,
+        threshold: float,
+        include_embedding: bool = False,
+    ) -> ClassificationResult:
         if top_k < 1:
             raise ValueError("top_k must be >= 1")
         if not 0.0 <= threshold <= 1.0:
@@ -81,13 +88,19 @@ class ClipClassifier:
             )
 
         elapsed_ms = (time.perf_counter() - started) * 1000
-        return ClassificationResult(model=self.model_name, labels=ranked, elapsed_ms=elapsed_ms)
+        return ClassificationResult(
+            model=self.model_name,
+            labels=ranked,
+            elapsed_ms=elapsed_ms,
+            embedding=image_features.squeeze(0).tolist() if include_embedding else None,
+        )
 
     def classify_batch(
         self,
         image_batch: list[bytes],
         top_k: int,
         threshold: float,
+        include_embedding: bool = False,
     ) -> list[ClassificationResult]:
         if top_k < 1:
             raise ValueError("top_k must be >= 1")
@@ -127,6 +140,7 @@ class ClipClassifier:
                     model=self.model_name,
                     labels=ranked,
                     elapsed_ms=elapsed_ms / len(image_batch),
+                    embedding=image_features[row_index].tolist() if include_embedding else None,
                 )
             )
         return results

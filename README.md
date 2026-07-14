@@ -104,16 +104,20 @@ Start-Service ClipClassifierService
 - `GET /readyz`
 - `GET /metrics`
 - `GET /v1/encryption/public-key`
-- `POST /v1/classify` with `multipart/form-data` field `file`, optional `top_k`, optional `threshold`
-- `POST /v1/classify/encrypted` with JSON encrypted payload, optional `top_k`, optional `threshold`
-- `POST /v1/classify/batch` with repeated `multipart/form-data` field `files`, optional `top_k`, optional `threshold`
-- `POST /v1/classify/batch/encrypted` with JSON encrypted payloads, optional `top_k`, optional `threshold`
+- `POST /v1/classify` with `multipart/form-data` field `file`, optional `top_k`, optional `threshold`, optional `include_embedding`
+- `POST /v1/classify/encrypted` with JSON encrypted payload, optional `top_k`, optional `threshold`, optional `include_embedding`
+- `POST /v1/classify/batch` with repeated `multipart/form-data` field `files`, optional `top_k`, optional `threshold`, optional `include_embedding`
+- `POST /v1/classify/batch/encrypted` with JSON encrypted payloads, optional `top_k`, optional `threshold`, optional `include_embedding`
 
 Each returned label includes `score` (softmax over configured labels) and
 `similarity` (raw image-text cosine similarity for the best prompt in that label).
 The request `threshold` filters by `score`, not `similarity`. Clients that need
 raw cosine thresholds should request `threshold=0.0` with enough `top_k` labels
 and apply their own thresholding to `similarity`.
+
+Set `include_embedding=true` to include the normalized image embedding in each
+result as `embedding: {model, dim, vector}`. It defaults to `false` because the
+vector is large and most classification clients only need labels.
 
 If `CLIP_AUTH_ENABLED=true`, include `Authorization: Bearer <token>` on every request.
 
@@ -141,6 +145,13 @@ External encrypted batch smoke test:
 
 ```powershell
 python test_external_api.py C:\path\one.jpg C:\path\two.jpg --base-url https://example.internal/openai-clip --batch-size 8 --top-k 3
+```
+
+To verify embedding output after deployment, pass the cached public key and request
+embeddings:
+
+```powershell
+python test_external_api.py C:\path\one.jpg C:\path\two.jpg --base-url https://example.internal/openai-clip --public-key <public-key> --include-embedding --top-k 66
 ```
 
 ## Production notes

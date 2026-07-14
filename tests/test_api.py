@@ -14,7 +14,13 @@ from clip_classifier_service.settings import Settings
 class FakeClassifier:
     ready: bool = True
 
-    def classify(self, image_bytes: bytes, top_k: int, threshold: float) -> ClassificationResult:
+    def classify(
+        self,
+        image_bytes: bytes,
+        top_k: int,
+        threshold: float,
+        include_embedding: bool = False,
+    ) -> ClassificationResult:
         assert image_bytes == b"fake-image"
         assert top_k == 1
         assert threshold == 0.25
@@ -22,6 +28,7 @@ class FakeClassifier:
             model="fake-model",
             labels=[ScoredLabel(id="cat", name="Cat", score=0.99, similarity=0.88)],
             elapsed_ms=1.5,
+            embedding=[1.0, 0.0] if include_embedding else None,
         )
 
     def classify_batch(
@@ -29,8 +36,12 @@ class FakeClassifier:
         image_batch: list[bytes],
         top_k: int,
         threshold: float,
+        include_embedding: bool = False,
     ) -> list[ClassificationResult]:
-        return [self.classify(image_bytes, top_k, threshold) for image_bytes in image_batch]
+        return [
+            self.classify(image_bytes, top_k, threshold, include_embedding)
+            for image_bytes in image_batch
+        ]
 
 
 def test_health_and_ready_endpoints(tmp_path: Path) -> None:
@@ -270,6 +281,25 @@ def test_classify_endpoint_returns_top_labels(tmp_path: Path) -> None:
     assert response.json()["labels"] == [
         {"id": "cat", "name": "Cat", "score": 0.99, "similarity": 0.88}
     ]
+    assert "embedding" not in response.json()
+
+
+def test_classify_endpoint_can_return_embedding(tmp_path: Path) -> None:
+    app = create_app(Settings(model_cache_dir=tmp_path), classifier=FakeClassifier())
+    client = TestClient(app)
+
+    response = client.post(
+        "/v1/classify",
+        params={"top_k": 1, "threshold": 0.25, "include_embedding": "true"},
+        files={"file": ("image.jpg", b"fake-image", "image/jpeg")},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["embedding"] == {
+        "model": "fake-model",
+        "dim": 2,
+        "vector": [1.0, 0.0],
+    }
 
 
 def test_public_key_endpoint_returns_encryption_metadata(tmp_path: Path) -> None:
@@ -357,7 +387,7 @@ def test_encrypted_batch_classify_returns_per_image_results(tmp_path: Path) -> N
 
     response = client.post(
         "/v1/classify/batch/encrypted",
-        params={"top_k": 1, "threshold": 0.25},
+        params={"top_k": 1, "threshold": 0.25, "include_embedding": "true"},
         json={
             "items": [
                 {"filename": "one.jpg", **encrypted},
@@ -371,6 +401,11 @@ def test_encrypted_batch_classify_returns_per_image_results(tmp_path: Path) -> N
     assert response.json()["results"][0]["labels"] == [
         {"id": "cat", "name": "Cat", "score": 0.99, "similarity": 0.88}
     ]
+    assert response.json()["results"][0]["embedding"] == {
+        "model": "fake-model",
+        "dim": 2,
+        "vector": [1.0, 0.0],
+    }
 
 
 def test_require_encrypted_uploads_rejects_plaintext_classify(tmp_path: Path) -> None:
@@ -451,6 +486,7 @@ def test_backend_value_error_returns_400(tmp_path: Path) -> None:
             image_bytes: bytes,
             top_k: int,
             threshold: float,
+            include_embedding: bool = False,
         ) -> ClassificationResult:
             raise ValueError("invalid image")
 

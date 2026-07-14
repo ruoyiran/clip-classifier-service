@@ -37,6 +37,28 @@ def test_classifier_returns_ranked_scores() -> None:
     assert result.labels[0].score > result.labels[1].score
     assert result.labels[0].similarity == 1.0
     assert result.model == "test-backend"
+    assert result.embedding is None
+
+
+def test_classifier_can_return_normalized_image_embedding() -> None:
+    labels = [
+        Label(id="cat", name="Cat", prompt="cat prompt", enabled=True),
+        Label(id="dog", name="Dog", prompt="dog prompt", enabled=True),
+    ]
+    backend = FakeBackend(
+        image_features=torch.tensor([[2.0, 0.0]]),
+        text_features=torch.tensor([[1.0, 0.0], [0.0, 1.0]]),
+    )
+    classifier = ClipClassifier(labels=labels, backend=backend)
+
+    result = classifier.classify(
+        image_bytes=b"image",
+        top_k=2,
+        threshold=0.0,
+        include_embedding=True,
+    )
+
+    assert result.embedding == [1.0, 0.0]
 
 
 def test_classifier_applies_threshold() -> None:

@@ -54,7 +54,7 @@ async def read_upload_limited(file: UploadFile, limit: int) -> bytes:
 
 
 def serialize_result(result):
-    return {
+    data = {
         "model": result.model,
         "elapsed_ms": result.elapsed_ms,
         "labels": [
@@ -67,6 +67,13 @@ def serialize_result(result):
             for label in result.labels
         ],
     }
+    if result.embedding is not None:
+        data["embedding"] = {
+            "model": result.model,
+            "dim": len(result.embedding),
+            "vector": result.embedding,
+        }
+    return data
 
 
 def encrypted_payload_to_dict(payload: EncryptedImagePayload) -> dict[str, str]:
@@ -189,6 +196,7 @@ def create_app(
         file: Annotated[UploadFile, File()],
         top_k: Annotated[int, Query(ge=1, le=100)] = settings.default_top_k,
         threshold: Annotated[float, Query(ge=0.0, le=1.0)] = settings.default_threshold,
+        include_embedding: bool = False,
     ):
         if settings.require_encrypted_uploads:
             raise HTTPException(status_code=403, detail="encrypted uploads are required")
@@ -210,6 +218,7 @@ def create_app(
                         image_bytes=image_bytes,
                         top_k=top_k,
                         threshold=threshold,
+                        include_embedding=include_embedding,
                     )
         except ValueError as exc:
             REQUESTS.labels(endpoint="/v1/classify", status="bad_request").inc()
@@ -222,6 +231,7 @@ def create_app(
         payload: EncryptedImagePayload,
         top_k: Annotated[int, Query(ge=1, le=100)] = settings.default_top_k,
         threshold: Annotated[float, Query(ge=0.0, le=1.0)] = settings.default_threshold,
+        include_embedding: bool = False,
     ):
         current = state.get("classifier")
         if current is None or not getattr(current, "ready", False):
@@ -249,6 +259,7 @@ def create_app(
                         image_bytes=image_bytes,
                         top_k=top_k,
                         threshold=threshold,
+                        include_embedding=include_embedding,
                     )
         except ValueError as exc:
             REQUESTS.labels(endpoint="/v1/classify/encrypted", status="bad_request").inc()
@@ -261,6 +272,7 @@ def create_app(
         files: Annotated[list[UploadFile], File()],
         top_k: Annotated[int, Query(ge=1, le=100)] = settings.default_top_k,
         threshold: Annotated[float, Query(ge=0.0, le=1.0)] = settings.default_threshold,
+        include_embedding: bool = False,
     ):
         if settings.require_encrypted_uploads:
             raise HTTPException(status_code=403, detail="encrypted uploads are required")
@@ -300,6 +312,7 @@ def create_app(
                         image_batch=image_batch,
                         top_k=top_k,
                         threshold=threshold,
+                        include_embedding=include_embedding,
                     )
         except ValueError as exc:
             REQUESTS.labels(endpoint="/v1/classify/batch", status="bad_request").inc()
@@ -318,6 +331,7 @@ def create_app(
         payload: EncryptedBatchPayload,
         top_k: Annotated[int, Query(ge=1, le=100)] = settings.default_top_k,
         threshold: Annotated[float, Query(ge=0.0, le=1.0)] = settings.default_threshold,
+        include_embedding: bool = False,
     ):
         if len(payload.items) > settings.max_batch_size:
             REQUESTS.labels(endpoint="/v1/classify/batch/encrypted", status="too_many").inc()
@@ -352,6 +366,7 @@ def create_app(
                         image_batch=image_batch,
                         top_k=top_k,
                         threshold=threshold,
+                        include_embedding=include_embedding,
                     )
         except ValueError as exc:
             REQUESTS.labels(endpoint="/v1/classify/batch/encrypted", status="bad_request").inc()
