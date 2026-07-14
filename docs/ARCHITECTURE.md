@@ -42,7 +42,7 @@ POST /v1/classify, or POST <base_path>/v1/classify when CLIP_BASE_PATH is set
   -> capped upload read
   -> single-GPU semaphore
   -> asyncio.to_thread(classifier.classify)
-  -> Pillow decode and pixel guard
+  -> Pillow decode with HEIC/HEIF plugin and pixel guard
   -> OpenCLIP image encode
   -> similarity ranking with softmax scores and raw best-prompt similarity
   -> JSON response
@@ -97,6 +97,7 @@ Use one process per GPU unless memory and latency have been measured. Multiple U
 - `CLIP_MAX_ENCRYPTED_IMAGE_BYTES`: Per-image encrypted payload byte limit. Default: `44040192` bytes, 42 MiB.
 - `CLIP_MAX_MULTIPART_OVERHEAD_BYTES`: Request body allowance for multipart overhead.
 - `CLIP_MAX_IMAGE_PIXELS`: Decoded pixel limit for Pillow.
+- Supported decoded image inputs include JPEG/JPG, PNG, BMP, HEIC, and HEIF.
 - Invalid image payloads are converted to `400`.
 - Oversized payloads are converted to `413`.
 - Query params are validated by FastAPI.

@@ -5,6 +5,7 @@ These examples target the current local deployment:
 - Base URL: `http://127.0.0.1:8080/openai-clip`
 - Auth: `Authorization: Bearer <token>`
 - Classification mode: encrypted upload
+- Supported image formats: JPEG/JPG, PNG, BMP, HEIC, HEIF
 - Max decrypted image size: 30 MiB
 - Max encrypted JSON request body: 42 MiB
 - nginx max request body: 50 MiB
@@ -59,7 +60,7 @@ curl -X POST \
   "encrypted_key": "<base64 sealed AES-256 key>",
   "nonce": "<base64 12-byte AES-GCM nonce>",
   "ciphertext": "<base64 AES-GCM ciphertext plus tag>",
-  "filename": "image.jpg"
+  "filename": "image.heic"
 }
 ```
 
@@ -83,7 +84,7 @@ curl -X POST \
       "encrypted_key": "<base64 sealed AES-256 key>",
       "nonce": "<base64 12-byte AES-GCM nonce>",
       "ciphertext": "<base64 AES-GCM ciphertext plus tag>",
-      "filename": "one.jpg"
+      "filename": "one.png"
     }
   ]
 }
@@ -94,7 +95,7 @@ If you are testing locally with plaintext endpoints explicitly allowed, this mul
 ```bash
 curl -X POST \
   -H "Authorization: Bearer ${TOKEN}" \
-  -F "file=@C:\path\image.jpg" \
+  -F "file=@C:\path\image.heic" \
   "${BASE_URL}/v1/classify?top_k=3"
 ```
 
@@ -120,7 +121,7 @@ from nacl.public import PublicKey, SealedBox
 
 BASE_URL = "http://127.0.0.1:8080/openai-clip"
 TOKEN = "<token>"
-IMAGE_PATH = r"C:\path\image.jpg"
+IMAGE_PATH = r"C:\path\image.heic"
 
 
 def b64(value: bytes) -> str:
@@ -169,7 +170,7 @@ Batch encrypted classification:
 ```python
 from pathlib import Path
 
-image_paths = [Path(r"C:\path\one.jpg"), Path(r"C:\path\two.jpg")]
+image_paths = [Path(r"C:\path\one.png"), Path(r"C:\path\two.bmp")]
 
 items = []
 for image_path in image_paths:
@@ -207,7 +208,7 @@ item's `filename` when supplied:
 {
   "results": [
     {
-      "filename": "one.jpg",
+      "filename": "one.png",
       "model": "hf-hub:apple/DFN5B-CLIP-ViT-H-14-378",
       "elapsed_ms": 123.45,
       "labels": [
@@ -251,7 +252,7 @@ import (
 const (
 	baseURL = "http://127.0.0.1:8080/openai-clip"
 	token   = "<token>"
-	image   = `C:\path\image.jpg`
+	image   = `C:\path\image.heic`
 )
 
 type PublicKeyResponse struct {
