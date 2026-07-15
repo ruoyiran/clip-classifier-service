@@ -8,7 +8,6 @@ labels:
   - a photo of a person
   - a portrait photo of people
   - a close-up selfie of a face
-  - a photo of a baby or child
   - a printed photo of people held in a hand
   - a full body photo of a person standing outdoors
   - a casual travel photo of a person posing
@@ -22,7 +21,6 @@ labels:
   - a close-up photo of hands, arms or a person's body
   - a person sitting in a car, room or restaurant
   - a close-up photo of a human face or hands
-  - a photo of a baby, toddler or child
   enabled: true
 - id: group_photo
   name: 合影
@@ -36,6 +34,19 @@ labels:
   - friends standing together at a tourist spot
   - a wedding group photo
   - a photo of a crowd or many people together
+  enabled: true
+- id: child
+  name: 儿童
+  prompts:
+  - a photo of a baby or child
+  - a photo of a baby, toddler or child
+  - a portrait photo of a child
+  - a close-up photo of a baby's face
+  - a child playing indoors or outdoors
+  - a child sitting in a stroller or high chair
+  - a child at home, school, park or playground
+  - a family photo centered on a child
+  - a candid photo of children playing
   enabled: true
 - id: animal
   name: 动物
@@ -415,9 +426,22 @@ labels:
   prompts:
   - a photo of people playing sports
   - a photo of a sports game or athletic competition
-  - a photo of someone exercising at a gym
   - a photo of sports balls such as soccer balls, basketballs, baseballs or tennis balls
-  - a photo of sports equipment such as rackets, surfboards, skis, snowboards or dumbbells
+  - a photo of sports equipment such as rackets, surfboards, skis or snowboards
+  - a photo of athletes playing on a field, court or track
+  enabled: true
+- id: fitness_exercise
+  name: 健身锻炼
+  prompts:
+  - a photo of someone exercising at a gym
+  - a photo of a fitness workout
+  - a photo of strength training or weight lifting
+  - a photo of dumbbells, barbells or gym equipment
+  - a person running on a treadmill or using an exercise machine
+  - a person doing yoga, stretching or pilates
+  - a person doing a home workout
+  - a photo inside a fitness center or gym room
+  - a close-up photo of exercise equipment
   enabled: true
 - id: performance_event
   name: 演出活动
