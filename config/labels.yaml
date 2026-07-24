@@ -389,6 +389,20 @@ labels:
   - a photo of a television or projector screen showing a movie
   - a photo of a screen showing subtitles, menus or video playback
   enabled: true
+- id: wechat_screenshot
+  name: 微信截图
+  prompts:
+  - a screenshot of WeChat
+  - a screenshot of the WeChat mobile app
+  - a WeChat chat screenshot
+  - a WeChat group chat screenshot
+  - a screenshot of WeChat Moments social feed
+  - a screenshot of a WeChat Pay payment or receipt page
+  - a screenshot of a WeChat mini program interface
+  - a screenshot of a WeChat official account article or message
+  - a screenshot of a WeChat contact, profile or group information page
+  - a vertical smartphone screenshot of the WeChat app with Chinese text
+  enabled: true
 - id: document
   name: 文档
   prompts:

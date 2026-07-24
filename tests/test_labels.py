@@ -50,6 +50,15 @@ labels:
     assert labels[0].prompts == ("a photo of a cat", "a photo of a kitten")
 
 
+def test_default_labels_include_wechat_screenshot() -> None:
+    labels = load_labels(Path("config/labels.yaml"))
+    labels_by_id = {label.id: label for label in labels}
+
+    assert labels_by_id["screenshot"].name == "截图"
+    assert labels_by_id["wechat_screenshot"].name == "微信截图"
+    assert any("WeChat" in prompt for prompt in labels_by_id["wechat_screenshot"].prompts)
+
+
 def test_load_labels_rejects_empty_enabled_set(tmp_path: Path) -> None:
     labels_file = tmp_path / "labels.yaml"
     labels_file.write_text(

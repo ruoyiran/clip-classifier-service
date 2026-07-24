@@ -124,7 +124,10 @@ curl.exe -H "Authorization: Bearer $token" -F "file=@C:\path\image.heic" "http:/
 
 ## Production Checklist
 
-- Replace default labels with the real production label set.
+- Replace default labels with the real production label set. The default set includes
+  separate `screenshot` and `wechat_screenshot` labels.
+- Run `.\.venv\Scripts\python.exe scripts\preload_model.py` after label changes so
+  startup/model-path checks refresh text features for the configured prompts.
 - Preload model weights during deployment.
 - Enable `CLIP_AUTH_ENABLED=true` and configure a private `CLIP_API_TOKENS` value.
 - Generate encryption keys before setting `CLIP_ENCRYPTION_ENABLED=true`.
