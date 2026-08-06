@@ -3,6 +3,25 @@
 Commands for verifying the service on `bytedance@bytedance`, deployed at
 `~/deploy/clip-classifier-service` under launchd.
 
+## Deployed configuration
+
+Recorded from the live deployment on 2026-08-07.
+
+| Setting | Value |
+| --- | --- |
+| Path | `~/deploy/clip-classifier-service` |
+| Branch | `feat/macos-launchd-deployment` |
+| Python | 3.12.13 via uv, at `~/.local/bin/uv` |
+| torch / numpy | 2.8.0 / 2.5.1, MPS available |
+| Device | `mps`, fp32 |
+| Base path | `/openai-clip` |
+| Listen | `0.0.0.0:8000`, LAN IP 192.168.1.188 |
+| Auth | enabled, one token in `.env` (mode 600) |
+| Encryption | enabled, keys in `config/` (private key mode 600) |
+| Labels | 69, all enabled |
+| Model cache | `models/`, 3.7 GB |
+| launchd label | `com.clip-classifier-service` in `gui/501` |
+
 ## Two things that will surprise you
 
 1. **Every endpoint needs the token, including health checks.** `/healthz`,
@@ -80,8 +99,19 @@ for i in 1 2 3 4; do
 done
 ```
 
-Discard run 1, which pays for warm-up. This is fp32 on an M1 Pro rather than
-fp16 on a 4090, so expect a significant regression against the Windows host.
+Discard run 1, which pays for warm-up. Measured on the M1 Pro at fp32 on MPS:
+
+| Request | Measured |
+| --- | --- |
+| Single image | about 1.89 s, stable across runs |
+| Batch of 4 | 3.68 s total, about 0.92 s per image |
+| Batch of 8 | 200 OK |
+| Startup to `readyz` 200 | about 20 s |
+| Resident memory | about 1.2 GB |
+
+Batching roughly doubles per-image throughput, so prefer
+`/v1/classify/batch` for bulk work. This is fp32 on Metal rather than fp16 on a
+4090, so it is much slower than the Windows host by design.
 
 ## Encryption
 
