@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  launchd user agent template for clip-classifier-service.
+
+  This is a template. Install it with the deploy path substituted in:
+
+    sed "s|__DEPLOY_ROOT__|$HOME/deploy/clip-classifier-service|g" \
+      scripts/com.clip-classifier-service.plist \
+      > ~/Library/LaunchAgents/com.clip-classifier-service.plist
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.clip-classifier-service.plist
+
+  A user agent, not a LaunchDaemon: /Library/LaunchDaemons needs root, and this
+  deployment has no sudo access. The tradeoff is that the service runs in the
+  user's login session.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.clip-classifier-service</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>__DEPLOY_ROOT__/scripts/start_macos.sh</string>
+    </array>
+
+    <!-- Required. Settings uses env_file=".env" and resolves models/ and
+         config/labels.yaml relative to the working directory. -->
+    <key>WorkingDirectory</key>
+    <string>__DEPLOY_ROOT__</string>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <!-- Startup loads roughly 4 GB of weights. Without a throttle, a persistent
+         startup failure would become a crash loop that saturates the machine. -->
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+
+    <key>StandardOutPath</key>
+    <string>__DEPLOY_ROOT__/logs/launchd.out.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>__DEPLOY_ROOT__/logs/launchd.err.log</string>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <!-- launchd starts with a minimal PATH that omits the venv and uv. -->
+        <key>PATH</key>
+        <string>/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+</dict>
+</plist>
