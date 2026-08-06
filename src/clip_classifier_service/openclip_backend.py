@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import os
+import sys
 from pathlib import Path
 
 import open_clip
@@ -28,10 +29,36 @@ class OpenClipBackend:
             else torch.float32
         )
 
-        os.environ.setdefault("HF_HOME", str(settings.model_cache_dir.resolve()))
+        self._apply_model_cache_dir(settings.model_cache_dir)
         self.model, _, self.preprocess = self._create_model()
         self.tokenizer = open_clip.get_tokenizer(settings.model_name)
         self.model.eval()
+
+    @staticmethod
+    def _apply_model_cache_dir(model_cache_dir: Path) -> None:
+        """Redirect Hugging Face downloads into the configured cache directory.
+
+        Setting HF_HOME here is not enough on its own: huggingface_hub reads it
+        into module constants at import time, and open_clip has already imported
+        it by then. Without also rewriting those constants, CLIP_MODEL_CACHE_DIR
+        is silently ignored and weights land in ~/.cache/huggingface.
+        """
+        resolved = model_cache_dir.resolve()
+        os.environ["HF_HOME"] = str(resolved)
+        hub_cache = resolved / "hub"
+        os.environ["HF_HUB_CACHE"] = str(hub_cache)
+        hub_cache.mkdir(parents=True, exist_ok=True)
+
+        import huggingface_hub.constants as hf_constants
+
+        hf_constants.HF_HOME = str(resolved)
+        hf_constants.HF_HUB_CACHE = str(hub_cache)
+        # open_clip and huggingface_hub.file_download bind the cache path at
+        # import time, so rewrite it wherever it was already captured.
+        for module_name in ("huggingface_hub.file_download", "huggingface_hub._snapshot_download"):
+            module = sys.modules.get(module_name)
+            if module is not None and hasattr(module, "HF_HUB_CACHE"):
+                module.HF_HUB_CACHE = str(hub_cache)
 
     def _create_model(self):
         try:
