@@ -13,6 +13,10 @@ from clip_classifier_service.settings import Settings
 
 register_heif_opener(thumbnails=False)
 
+# Route operators that Metal does not implement to the CPU instead of raising.
+# Must be set before the first torch MPS call.
+os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
+
 
 class OpenClipBackend:
     def __init__(self, settings: Settings) -> None:
@@ -25,13 +29,32 @@ class OpenClipBackend:
         )
 
         os.environ.setdefault("HF_HOME", str(settings.model_cache_dir.resolve()))
-        self.model, _, self.preprocess = open_clip.create_model_and_transforms(
-            settings.model_name,
-            device=self.device,
-            precision=settings.precision if self.device.type == "cuda" else "fp32",
-        )
+        self.model, _, self.preprocess = self._create_model()
         self.tokenizer = open_clip.get_tokenizer(settings.model_name)
         self.model.eval()
+
+    def _create_model(self):
+        try:
+            return open_clip.create_model_and_transforms(
+                self.settings.model_name,
+                device=self.device,
+                precision=self._precision_for(self.device),
+            )
+        except (RuntimeError, NotImplementedError):
+            # Metal can fail to place a model this large. CPU always works, so
+            # degrade rather than leave the service unable to start.
+            if self.device.type != "mps":
+                raise
+            self.device = torch.device("cpu")
+            self.dtype = torch.float32
+            return open_clip.create_model_and_transforms(
+                self.settings.model_name,
+                device=self.device,
+                precision=self._precision_for(self.device),
+            )
+
+    def _precision_for(self, device: torch.device) -> str:
+        return self.settings.precision if device.type == "cuda" else "fp32"
 
     def encode_texts(self, prompts: list[str]) -> torch.Tensor:
         tokens = self.tokenizer(prompts).to(self.device)
@@ -71,6 +94,8 @@ class OpenClipBackend:
     def _resolve_device(device: str) -> torch.device:
         if device == "cuda" and not torch.cuda.is_available():
             raise RuntimeError("CUDA was requested but is not available")
+        if device == "mps" and not torch.backends.mps.is_available():
+            return torch.device("cpu")
         return torch.device(device)
 
 

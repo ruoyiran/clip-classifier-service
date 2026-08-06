@@ -146,7 +146,10 @@ Never committed — `.gitignore` already covers `.env` and both key files.
 - `CLIP_ENCRYPTION_ENABLED=true`, keys from `scripts/generate_encryption_keys.py`
 - `CLIP_HOST=0.0.0.0`, `CLIP_PORT=8000`
 - `CLIP_MODEL_CACHE_DIR=models`, `CLIP_LABELS_PATH=config/labels.yaml`
-- `CLIP_BASE_PATH=` empty — no reverse proxy prefix in front of this deployment
+- `CLIP_BASE_PATH=/openai-clip` — matches the existing deployment convention in
+  the README and the default in `scripts/encrypt_sample_image.py`. Every route is
+  served under this prefix, so health checks live at
+  `/openai-clip/healthz`, not `/healthz`.
 
 Then run `scripts/preload_model.py` **before** enabling the service. This
 downloads roughly 3.9 GB of weights and encodes the text features for all 69

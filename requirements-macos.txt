@@ -1,0 +1,30 @@
+# Dependencies for macOS on Apple Silicon (arm64).
+#
+# Use this file instead of requirements.txt on macOS. requirements.txt pins the
+# +cu121 CUDA builds of torch/torchvision, which do not exist as macOS wheels.
+# Inference runs on Metal (MPS) or CPU instead. See CLIP_DEVICE in .env.
+#
+#   uv pip install -r requirements-macos.txt
+#   uv pip install -e . --no-deps
+#
+# The --no-deps on the second command is required: pyproject.toml carries the
+# same +cu121 pins and would otherwise reinstall them.
+fastapi>=0.111,<1.0
+uvicorn[standard]>=0.30,<1.0
+pydantic>=2.7,<3.0
+pydantic-settings>=2.3,<3.0
+python-multipart>=0.0.9,<1.0
+pillow>=11.1,<12.0
+pillow-heif>=1.0,<2.0
+pyyaml>=6.0,<7.0
+prometheus-client>=0.20,<1.0
+pynacl>=1.5,<2.0
+cryptography>=42,<50
+open-clip-torch>=2.24,<3.0
+# torchvision 0.23.0 pins torch==2.8.0 exactly, so these two move together.
+torch==2.8.0
+torchvision==0.23.0
+# Deliberately not <2.0 as in requirements.txt. The torch 2.8 macOS wheels are
+# built against the numpy 2.x ABI; forcing numpy 1.x alongside them can fail at
+# import.
+numpy>=1.26
